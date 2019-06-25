@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Text;
 
+/// <summary>
+/// 
+/// </summary>
 namespace Hydrology.Utils
 {
     public static class CGprsUtil
