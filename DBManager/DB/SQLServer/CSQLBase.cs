@@ -128,7 +128,7 @@ namespace Hydrology.DBManager.DB.SQLServer
         protected bool ExecuteSQLCommand(string cmd)
         {
             // 获取对数据的的实例唯一访问权
-            m_mutexWriteToDB.WaitOne();
+            //m_mutexWriteToDB.WaitOne();
             SqlConnection conn = CDBManager.GetInstacne().GetConnection();
             try
             {
@@ -136,7 +136,7 @@ namespace Hydrology.DBManager.DB.SQLServer
                 SqlCommand command = conn.CreateCommand();
                 command.CommandText = cmd;
                 int lines = command.ExecuteNonQuery();
-                CDBLog.Instance.AddInfo("插入12条数据到水位表");
+                //CDBLog.Instance.AddInfo("插入12条数据到水位表");
                 Debug.WriteLine("{0}行收到影响", lines);
                 return true;
             }
@@ -146,7 +146,7 @@ namespace Hydrology.DBManager.DB.SQLServer
             }
             finally
             {
-                m_mutexWriteToDB.ReleaseMutex();
+                //m_mutexWriteToDB.ReleaseMutex();
                 conn.Close();
             }
             return false;

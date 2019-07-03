@@ -74,9 +74,14 @@ namespace Hydrology.Forms
                 }
                 cmb_SubCenter.SelectedIndex = 0;
                 // 初始化站点类型
-                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERainFall));
-                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERiverWater));
+                //cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERainFall));
+                //cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERiverWater));
+                //cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EHydrology));
+                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EH));
+                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EI));
+                cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EO));
                 cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EHydrology));
+
                 // 初始化雨量精度
 
                 cmb_RainAccuracy.Items.Add("0.1");

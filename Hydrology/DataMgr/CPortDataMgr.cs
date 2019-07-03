@@ -2516,7 +2516,7 @@ namespace Hydrology.DataMgr
                 CDBDataMgr.Instance.EHRecvStationTSDatas(null, stationDatas);
                 return;
             }
-            if (str.Contains("1G23"))
+            else if (str.Contains("1G23"))
             {
                 var stationDatas = new CEventRecvStationDatasArgs()
                 {
@@ -2567,7 +2567,7 @@ namespace Hydrology.DataMgr
                 return;
             }
             // 有待修改
-            if (str.Contains("+32") || str.Contains("COUT"))
+            else if (str.Contains("+32") || str.Contains("COUT"))
             {
                 if (str.Contains("+32"))
                 {
@@ -2584,7 +2584,7 @@ namespace Hydrology.DataMgr
                 fs.Close();
 
             }
-            if (str.Contains("TS"))
+            else if (str.Contains("TS"))
             {
                 var stationDatas = new CEventRecvStationDatasArgs()
                 {
@@ -2616,6 +2616,45 @@ namespace Hydrology.DataMgr
                 CDBDataMgr.Instance.EHRecvStationTSDatas(null, stationDatas);
 
             }
+            //流速法
+            //****************************************************************************************************
+            else if(str.Contains("@@  QTFM"))
+            {
+                var stationDatas = new CEventRecvStationDatasArgs()
+                {
+                    StrStationID = report.Stationid,
+                    EStationType = report.StationType,
+                    EMessageType = report.ReportType,
+                    RecvDataTime = report.RecvTime,
+                    EChannelType = report.ChannelType,
+                    StrSerialPort = report.ListenPort
+                };
+                if (report.Datas.Count == 0)
+                {
+                    string rawStr = e.RawData;
+                    //report.Datas.Add(WrongParser(rawStr));
+                }
+                //将流速数据取出
+                foreach (var item in report.Datas)
+                {
+                    stationDatas.Datas.Add(new CSingleStationData()
+                    {
+                        Vm = item.Vm,
+                        Q = item.Q,
+                        W1 = item.W1,
+                        W2 = item.W2,
+                        v1 = item.v1,
+                        v2 = item.v2,
+                        v3 = item.v3,
+                        v4 = item.v4,
+                        Voltage = item.Voltge
+                    });
+                }
+                CDBDataMgr.Instance.EHRecvSpeedDatas(null, stationDatas);
+            }
+                    
+            //*************************************************************************************
+
             else
             {
                 if (report != null)

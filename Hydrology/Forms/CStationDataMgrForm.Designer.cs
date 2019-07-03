@@ -222,7 +222,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(65, 12);
             this.label6.TabIndex = 15;
-            this.label6.Text = "雨量图形：";
+            this.label6.Text = "图形选择：";
             // 
             // cmb_ViewStyle
             // 

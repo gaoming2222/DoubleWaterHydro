@@ -31,7 +31,19 @@ namespace Hydrology.Entity
         ESoil = 3,         //  04墒情站
         ESoilRain = 4,     //  05墒情雨量站
         ESoilWater = 5,     //  06，16墒情水位站
-        ESoilHydrology = 6  //  07，17墒情水文站
+        ESoilHydrology = 6,//  07，17墒情水文站
+        EP = 11, //降水（降水、蒸发、气象）
+        EH = 12, //河道（降水、蒸发、河道水情、气象、水质）
+        EK = 13, //水库（湖泊）（降水、蒸发、河道水情、气象、水质）
+        EZ = 14, //闸坝（降水、蒸发、闸坝水情、气象）
+        ED = 15, //泵站（降水、蒸发、泵站水情、气象）
+        ET = 16, //潮汐（降水、蒸发、潮汐水情、气象）
+        EM = 17, //墒情（降水、蒸发、墒情）
+        EG = 18, //地下水（埋深、水质、开采量）
+        EQ = 19, //水质（水质、流量、水位）
+        EI = 20, //取水口（水位、水质、水量、水压）
+        EO = 21  //排水口（水位、水质、水量、水压）
+
     }
 
     public enum EStationTypeProto
@@ -420,6 +432,40 @@ namespace Hydrology.Entity
         public static readonly string CS_EStationType_ESoilHydrology_UIStr = "墒情水文站";
         public static readonly string CS_EStationType_ESoilHydrology_DBStr = "6";
 
+        public static readonly string CS_EStationType_EP_UIStr = "降水站";
+        public static readonly string CS_EStationType_EP_DBStr = "11";
+
+        public static readonly string CS_EStationType_EH_UIStr = "河道站";
+        public static readonly string CS_EStationType_EH_DBStr = "12";
+
+        public static readonly string CS_EStationType_EK_UIStr = "水库（湖泊）站";
+        public static readonly string CS_EStationType_EK_DBStr = "13";
+
+        public static readonly string CS_EStationType_EZ_UIStr = "闸坝站";
+        public static readonly string CS_EStationType_EZ_DBStr = "14";
+
+        public static readonly string CS_EStationType_ED_UIStr = "泵站";
+        public static readonly string CS_EStationType_ED_DBStr = "15";
+
+        public static readonly string CS_EStationType_ET_UIStr = "潮汐站";
+        public static readonly string CS_EStationType_ET_DBStr = "16";
+
+        public static readonly string CS_EStationType_EM_UIStr = "墒情站";
+        public static readonly string CS_EStationType_EM_DBStr = "17";
+
+        public static readonly string CS_EStationType_EG_UIStr = "地下水站";
+        public static readonly string CS_EStationType_EG_DBStr = "18";
+
+        public static readonly string CS_EStationType_EQ_UIStr = "水质站";
+        public static readonly string CS_EStationType_EQ_DBStr = "19";
+
+        public static readonly string CS_EStationType_EI_UIStr = "取水口";
+        public static readonly string CS_EStationType_EI_DBStr = "20";
+
+        public static readonly string CS_EStationType_EO_UIStr = "排水口";
+        public static readonly string CS_EStationType_EO_DBStr = "21";
+
+
         //        ESoil = 3,         //  04墒情站
         //ESoilRain = 4,     //  05墒情雨量站
         //ESoilWater = 5,     //  06，16墒情水位站
@@ -437,6 +483,19 @@ namespace Hydrology.Entity
                 case EStationType.ESoilRain: { result = CS_EStationType_ESoilRain_UIStr; } break;
                 case EStationType.ESoilWater: { result = CS_EStationType_ESoilWater_UIStr; } break;
                 case EStationType.ESoilHydrology: { result = CS_EStationType_ESoilHydrology_UIStr; } break;
+
+                case EStationType.EP: { result = CS_EStationType_EP_UIStr; } break;
+                case EStationType.EH: { result = CS_EStationType_EH_UIStr; } break;
+                case EStationType.EK: { result = CS_EStationType_EK_UIStr; } break;
+                case EStationType.EZ: { result = CS_EStationType_EZ_UIStr; } break;
+                case EStationType.ED: { result = CS_EStationType_ED_UIStr; } break;
+                case EStationType.ET: { result = CS_EStationType_ET_UIStr; } break;
+                case EStationType.EM: { result = CS_EStationType_EM_UIStr; } break;
+                case EStationType.EG: { result = CS_EStationType_EG_UIStr; } break;
+                case EStationType.EQ: { result = CS_EStationType_EQ_UIStr; } break;
+                case EStationType.EI: { result = CS_EStationType_EI_UIStr; } break;
+                case EStationType.EO: { result = CS_EStationType_EO_UIStr; } break;
+
                 default: { result = "未知站点类型"; } break;
             }
             return result;
@@ -487,6 +546,30 @@ namespace Hydrology.Entity
                 return EStationType.ESoilWater;
             else if (type.Equals(CS_EStationType_ESoilHydrology_UIStr))
                 return EStationType.ESoilHydrology;
+
+            else if (type.Equals(CS_EStationType_EP_UIStr))
+                return EStationType.EP;
+            else if (type.Equals(CS_EStationType_EH_UIStr))
+                return EStationType.EH;
+            else if (type.Equals(CS_EStationType_EK_UIStr))
+                return EStationType.EK;
+            else if (type.Equals(CS_EStationType_EZ_UIStr))
+                return EStationType.EZ;
+            else if (type.Equals(CS_EStationType_ED_UIStr))
+                return EStationType.ED;
+            else if (type.Equals(CS_EStationType_ET_UIStr))
+                return EStationType.ET;
+            else if (type.Equals(CS_EStationType_EM_UIStr))
+                return EStationType.EM;
+            else if (type.Equals(CS_EStationType_EG_UIStr))
+                return EStationType.EG;
+            else if (type.Equals(CS_EStationType_EQ_UIStr))
+                return EStationType.EQ;
+            else if (type.Equals(CS_EStationType_EI_UIStr))
+                return EStationType.EI;
+            else if (type.Equals(CS_EStationType_EO_UIStr))
+                return EStationType.EO;
+
             throw new Exception("UIStrToStationType ERROR");
         }
         public static EStationType DBStrToStationType(string type)
@@ -506,6 +589,29 @@ namespace Hydrology.Entity
                 return EStationType.ESoilWater;
             else if (type.Equals(CS_EStationType_ESoilHydrology_DBStr))
                 return EStationType.ESoilHydrology;
+
+            else if (type.Equals(CS_EStationType_EP_DBStr))
+                return EStationType.EP;
+            else if (type.Equals(CS_EStationType_EH_DBStr))
+                return EStationType.EH;
+            else if (type.Equals(CS_EStationType_EK_DBStr))
+                return EStationType.EK;
+            else if (type.Equals(CS_EStationType_EZ_DBStr))
+                return EStationType.EZ;
+            else if (type.Equals(CS_EStationType_ED_DBStr))
+                return EStationType.ED;
+            else if (type.Equals(CS_EStationType_ET_DBStr))
+                return EStationType.ET;
+            else if (type.Equals(CS_EStationType_EM_DBStr))
+                return EStationType.EM;
+            else if (type.Equals(CS_EStationType_EG_DBStr))
+                return EStationType.EG;
+            else if (type.Equals(CS_EStationType_EQ_DBStr))
+                return EStationType.EQ;
+            else if (type.Equals(CS_EStationType_EI_DBStr))
+                return EStationType.EI;
+            else if (type.Equals(CS_EStationType_EO_DBStr))
+                return EStationType.EO;
             throw new Exception("DBStrToStationType ERROR");
         }
         public static string StationTypeToDBStr(EStationType type)
@@ -519,6 +625,18 @@ namespace Hydrology.Entity
                 case EStationType.ESoilRain: return CS_EStationType_ESoilRain_DBStr;
                 case EStationType.ESoilWater: return CS_EStationType_ESoilWater_DBStr;
                 case EStationType.ESoilHydrology: return CS_EStationType_ESoilHydrology_DBStr;
+
+                case EStationType.EP: return CS_EStationType_EP_DBStr;
+                case EStationType.EH: return CS_EStationType_EH_DBStr;
+                case EStationType.EK: return CS_EStationType_EK_DBStr;
+                case EStationType.EZ: return CS_EStationType_EZ_DBStr;
+                case EStationType.ED: return CS_EStationType_ED_DBStr;
+                case EStationType.ET: return CS_EStationType_ET_DBStr;
+                case EStationType.EM: return CS_EStationType_EM_DBStr;
+                case EStationType.EG: return CS_EStationType_EG_DBStr;
+                case EStationType.EQ: return CS_EStationType_EQ_DBStr;
+                case EStationType.EI: return CS_EStationType_EI_DBStr;
+                case EStationType.EO: return CS_EStationType_EO_DBStr;
             }
             throw new Exception("StationTypeToDBStr ERROR");
         }

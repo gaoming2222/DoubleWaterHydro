@@ -343,6 +343,7 @@
             this.HistoryDataAdjust.Size = new System.Drawing.Size(189, 22);
             this.HistoryDataAdjust.Tag = "历史数据校正";
             this.HistoryDataAdjust.Text = "数据校正...";
+            this.HistoryDataAdjust.Visible = false;
             // 
             // MI_WarningInfoQuery
             // 
@@ -447,12 +448,12 @@
             this.OneStationYear.Name = "OneStationYear";
             this.OneStationYear.Size = new System.Drawing.Size(145, 22);
             this.OneStationYear.Tag = "单站年";
-            this.OneStationYear.Text = "单站年报表..."; 
+            this.OneStationYear.Text = "单站年报表...";
             // 
             // DataText
             // 
             this.DataText.Name = "DataText";
-            this.DataText.Size = new System.Drawing.Size(208, 22);
+            this.DataText.Size = new System.Drawing.Size(145, 22);
             this.DataText.Tag = "文本导出";
             this.DataText.Text = "文本导出";
             // 
@@ -479,7 +480,7 @@
             this.MI_ToolBar.Checked = true;
             this.MI_ToolBar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MI_ToolBar.Name = "MI_ToolBar";
-            this.MI_ToolBar.Size = new System.Drawing.Size(152, 22);
+            this.MI_ToolBar.Size = new System.Drawing.Size(148, 22);
             this.MI_ToolBar.Tag = "工具栏";
             this.MI_ToolBar.Text = "工具栏";
             // 
@@ -488,14 +489,14 @@
             this.MI_StatusBar.Checked = true;
             this.MI_StatusBar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MI_StatusBar.Name = "MI_StatusBar";
-            this.MI_StatusBar.Size = new System.Drawing.Size(152, 22);
+            this.MI_StatusBar.Size = new System.Drawing.Size(148, 22);
             this.MI_StatusBar.Tag = "状态栏";
             this.MI_StatusBar.Text = "状态栏";
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(145, 6);
             // 
             // toolBarToolStripMenuItem
             // 
@@ -504,7 +505,7 @@
             this.toolBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolBarToolStripMenuItem.Enabled = false;
             this.toolBarToolStripMenuItem.Name = "toolBarToolStripMenuItem";
-            this.toolBarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toolBarToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.toolBarToolStripMenuItem.Tag = "最新实时数据";
             this.toolBarToolStripMenuItem.Text = "实时水情数据";
             // 
@@ -515,7 +516,7 @@
             this.MI_Soil.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MI_Soil.Enabled = false;
             this.MI_Soil.Name = "MI_Soil";
-            this.MI_Soil.Size = new System.Drawing.Size(152, 22);
+            this.MI_Soil.Size = new System.Drawing.Size(148, 22);
             this.MI_Soil.Text = "实时数据";
             // 
             // MI_StationStatus
@@ -523,28 +524,28 @@
             this.MI_StationStatus.Checked = true;
             this.MI_StationStatus.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MI_StationStatus.Name = "MI_StationStatus";
-            this.MI_StationStatus.Size = new System.Drawing.Size(152, 22);
+            this.MI_StationStatus.Size = new System.Drawing.Size(148, 22);
             this.MI_StationStatus.Tag = "站点实时状态";
             this.MI_StationStatus.Text = "站点状态";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(145, 6);
             // 
             // MI_ComPortState
             // 
             this.MI_ComPortState.Checked = true;
             this.MI_ComPortState.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MI_ComPortState.Name = "MI_ComPortState";
-            this.MI_ComPortState.Size = new System.Drawing.Size(152, 22);
+            this.MI_ComPortState.Size = new System.Drawing.Size(148, 22);
             this.MI_ComPortState.Tag = "通讯口状态";
             this.MI_ComPortState.Text = "串口状态";
             // 
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(145, 6);
             // 
             // toolStripMenuItem8
             // 
@@ -552,7 +553,7 @@
             this.toolStripMenuItem8.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItem8.Enabled = false;
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem8.Tag = "系统日志";
             this.toolStripMenuItem8.Text = "运行日志";
             // 
@@ -561,7 +562,7 @@
             this.MI_WarningInfo.Checked = true;
             this.MI_WarningInfo.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MI_WarningInfo.Name = "MI_WarningInfo";
-            this.MI_WarningInfo.Size = new System.Drawing.Size(152, 22);
+            this.MI_WarningInfo.Size = new System.Drawing.Size(148, 22);
             this.MI_WarningInfo.Tag = "告警日志";
             this.MI_WarningInfo.Text = "告警信息";
             // 

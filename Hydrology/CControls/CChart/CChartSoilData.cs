@@ -9,6 +9,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Hydrology.DBManager.Interface;
 using System.Data;
+using DBManager.Interface;
+using DBManager.DB.SQLServer;
+using Entity;
 
 namespace Hydrology.CControls
 {
@@ -27,11 +30,11 @@ namespace Hydrology.CControls
         public static readonly string CS_CN_Voltage = "V0";
 
         // 含水率的坐标名字
-        public static readonly string CS_AsixY_Name = "含水率";
+        public static readonly string CS_AsixY_Name = "流速";
         public static readonly string CS_AsixY2_name = "电压";
 
         // 图表名字
-        public static readonly string CS_Chart_Name = "土壤含水率过程线";
+        public static readonly string CS_Chart_Name = "流速过程线";
 
         // 线条名字
         public static readonly string CS_Serial_Name_M10 = "10CM含水率";
@@ -58,9 +61,9 @@ namespace Hydrology.CControls
         // 线条对象
         private Series m_serialM10;
         private Series m_serialM20;
-        //  private Series m_serialM30;
+        private Series m_serialM30;
         private Series m_serialM40;
-        private Series m_serialVoltage;
+        //private Series m_serialVoltage;
         //  private Series m_serialM60;
 
         private Legend m_legend;     //图例
@@ -68,7 +71,7 @@ namespace Hydrology.CControls
         // 右键菜单
         private MenuItem m_MI_M10;
         private MenuItem m_MI_M20;
-        //    private MenuItem m_MI_M30;
+        private MenuItem m_MI_M30;
         private MenuItem m_MI_M40;
         private MenuItem m_MI_Voltage;
         //    private MenuItem m_MI_M60;
@@ -77,6 +80,7 @@ namespace Hydrology.CControls
         /// 数据库的代理，用于查询数据
         /// </summary>
         private ISoilDataProxy m_proxySoilData;
+        private IWaterSpeedProxy m_proxyWaterSpeed;
 
         //public DataTable dataTable1;
         //public DataTable dataTable2;
@@ -89,9 +93,9 @@ namespace Hydrology.CControls
             base.m_dataTable.Columns.Add(CS_CN_DateTime, typeof(DateTime));
             base.m_dataTable.Columns.Add(CS_CN_M10, typeof(float));
             base.m_dataTable.Columns.Add(CS_CN_M20, typeof(float));
-            //     base.m_dataTable.Columns.Add(CS_CN_M30, typeof(float));
+            base.m_dataTable.Columns.Add(CS_CN_M30, typeof(float));
             base.m_dataTable.Columns.Add(CS_CN_M40, typeof(float));
-            base.m_dataTable.Columns.Add(CS_CN_Voltage, typeof(float));
+            //base.m_dataTable.Columns.Add(CS_CN_Voltage, typeof(float));
             //dataTable1 = new System.Data.DataTable();
             //dataTable1.Columns.Add(CS_Asix_DateTime, typeof(DateTime));
             //dataTable1.Columns.Add(CS_Serial_Name_Votage, typeof(float));
@@ -103,24 +107,23 @@ namespace Hydrology.CControls
             //      base.m_dataTable.Columns.Add(CS_CN_M60, typeof(float));
         }
         // 外部添加水位流量接口
-        public void AddSoilData(List<CEntitySoilData> soilDatas)
+        public void AddSoilData(List<CEntityWaterSpeed> soilDatas)
         {
             try{
 
             #region 含水量最大最小值
-                foreach (CEntitySoilData entity in soilDatas)
+                foreach (CEntityWaterSpeed entity in soilDatas)
                 {
                     // 判断水位最大值和最小值
                     float maxValue = 0;
                     float minValue = 0;
                     List<Nullable<float>> listMoistrues = new List<Nullable<float>>();
-                    if ((entity.Moisture10.HasValue) && (entity.Moisture20.HasValue) && (entity.Moisture40.HasValue))
+                    if ((entity.AvgV1.HasValue) && (entity.AvgV2.HasValue) && (entity.AvgV3.HasValue) && (entity.AvgV4.HasValue))
                     {
-                        listMoistrues.Add(entity.Moisture10);
-                        listMoistrues.Add(entity.Moisture20);
-                        //listMoistrues.Add(entity.Moisture30);
-                        listMoistrues.Add(entity.Moisture40);
-                        //    listMoistrues.Add(entity.Moisture60);
+                        listMoistrues.Add((float)entity.AvgV1);
+                        listMoistrues.Add((float)entity.AvgV2);
+                        listMoistrues.Add((float)entity.AvgV3);
+                        listMoistrues.Add((float)entity.AvgV4);
                     }
                     bool bHasMaxValue = GetMaxValue(listMoistrues, ref maxValue);
                     bool bHasMinValue = GetMinValue(listMoistrues, ref minValue);
@@ -151,45 +154,45 @@ namespace Hydrology.CControls
             #endregion
                     #region 电压最大最小值
                     // 判断水位最大值和最小值
-                    float maxValue_1 = 0;
-                    float minValue_1 = 0;
-                    List<Nullable<float>> listVoltage = new List<Nullable<float>>();
-                    if (entity.DVoltage.ToString() != null)
-                    {
-                        listVoltage.Add(float.Parse(entity.DVoltage.ToString()));
-                    }
-                    bool bHasMaxValue_1 = GetMaxValue(listVoltage, ref maxValue_1);
-                    bool bHasMinValue_1 = GetMinValue(listVoltage, ref minValue_1);
-                    if (bHasMaxValue_1)
-                    {
-                        // 此次有最大值
-                        if (m_dMaxVoltage.HasValue)
-                        {
-                            if (maxValue_1 > m_dMaxMoistrue.Value)
-                            {
-                                m_dMaxVoltage = decimal.Parse(maxValue_1.ToString());
-                            }
-                            else
-                            {
-                                m_dMaxVoltage = decimal.Parse(maxValue_1.ToString());
-                            }
-                        }
+                    //float maxValue_1 = 0;
+                    //float minValue_1 = 0;
+                    //List<Nullable<float>> listVoltage = new List<Nullable<float>>();
+                    //if (entity.DVoltage.ToString() != null)
+                    //{
+                    //    listVoltage.Add(float.Parse(entity.DVoltage.ToString()));
+                    //}
+                    //bool bHasMaxValue_1 = GetMaxValue(listVoltage, ref maxValue_1);
+                    //bool bHasMinValue_1 = GetMinValue(listVoltage, ref minValue_1);
+                    //if (bHasMaxValue_1)
+                    //{
+                    //    // 此次有最大值
+                    //    if (m_dMaxVoltage.HasValue)
+                    //    {
+                    //        if (maxValue_1 > m_dMaxMoistrue.Value)
+                    //        {
+                    //            m_dMaxVoltage = decimal.Parse(maxValue_1.ToString());
+                    //        }
+                    //        else
+                    //        {
+                    //            m_dMaxVoltage = decimal.Parse(maxValue_1.ToString());
+                    //        }
+                    //    }
                        
-                    }
-                    if (bHasMinValue_1)
-                    {
-                        // 此次有最小值
-                        if (m_dMinVoltage.HasValue)
-                        {
-                            if (minValue_1 < m_dMinMoistrue)
-                            {
-                                m_dMinVoltage = decimal.Parse(minValue_1.ToString());
-                            }
-                            else
-                            {
-                                m_dMinVoltage = decimal.Parse(minValue_1.ToString());
-                            }
-                        }
+                    //}
+                    //if (bHasMinValue_1)
+                    //{
+                    //    // 此次有最小值
+                    //    if (m_dMinVoltage.HasValue)
+                    //    {
+                    //        if (minValue_1 < m_dMinMoistrue)
+                    //        {
+                    //            m_dMinVoltage = decimal.Parse(minValue_1.ToString());
+                    //        }
+                    //        else
+                    //        {
+                    //            m_dMinVoltage = decimal.Parse(minValue_1.ToString());
+                    //        }
+                    //    }
                         
                     #endregion
                         #region 日期最大最小值
@@ -197,28 +200,27 @@ namespace Hydrology.CControls
                         // 判断日期, 更新日期最大值和最小值
                         if (m_maxDateTime.HasValue)
                         {
-                            m_maxDateTime = m_maxDateTime < entity.DataTime ? entity.DataTime : m_maxDateTime;
+                            m_maxDateTime = m_maxDateTime < entity.DT ? entity.DT : m_maxDateTime;
                         }
                         else
                         {
-                            m_maxDateTime = entity.DataTime;
+                            m_maxDateTime = entity.DT;
                         }
                         if (m_minDateTime.HasValue)
                         {
-                            m_minDateTime = m_minDateTime > entity.DataTime ? entity.DataTime : m_minDateTime;
+                            m_minDateTime = m_minDateTime > entity.DT ? entity.DT : m_minDateTime;
                         }
                         else
                         {
-                            m_minDateTime = entity.DataTime;
+                            m_minDateTime = entity.DT;
                         }
                         #endregion 日期最大最小值
-                        if ((entity.Moisture10.HasValue) && (entity.Moisture20.HasValue) && (entity.Moisture40.HasValue))
+                        if ((entity.AvgV1.HasValue) && (entity.AvgV2.HasValue) && (entity.AvgV3.HasValue) && (entity.AvgV4.HasValue))
                         {
-                            if (entity.DVoltage.ToString() != "")
-                            {
+                           
                                 try
                                 {
-                                    m_dataTable.Rows.Add(entity.DataTime, entity.Moisture10, entity.Moisture20, entity.Moisture40, entity.DVoltage);
+                                    m_dataTable.Rows.Add(entity.DT, entity.AvgV1, entity.AvgV2, entity.AvgV3, entity.AvgV4);
                                 }
 #pragma warning disable CS0168 // 声明了变量“ex”，但从未使用过
                                 catch (Exception ex)
@@ -226,7 +228,7 @@ namespace Hydrology.CControls
                                 {
 
                                 }
-                            }
+                            
 
                         }
                         //if(entity.DVoltage.ToString() != "")
@@ -273,45 +275,45 @@ namespace Hydrology.CControls
                             m_chartAreaDefault.AxisY.Maximum = m_chartAreaDefault.AxisY.Minimum + 10;
                         }
 
-                        if (m_dMaxVoltage.HasValue && m_dMinVoltage.HasValue)
-                        {
-                            if (m_dMaxVoltage != m_dMinVoltage)
-                            {
-                                offset = (float)(m_dMaxVoltage - m_dMinVoltage) * 0.1f;
-                            }
-                            else
-                            {
-                                offset = (float)m_dMaxVoltage / 2;
-                            }
-                            m_chartAreaDefault.AxisY2.Maximum = (double)((float)m_dMaxVoltage + offset);
-                            m_chartAreaDefault.AxisY2.Minimum = (double)((float)m_dMinVoltage - offset);
-                            if (m_chartAreaDefault.AxisY2.Maximum <= m_chartAreaDefault.AxisY2.Minimum)
-                            {
-                                double a = m_chartAreaDefault.AxisY2.Minimum;
-                                m_chartAreaDefault.AxisY2.Minimum =  m_chartAreaDefault.AxisY2.Maximum;
-                                m_chartAreaDefault.AxisY2.Maximum = a;
-                            }
+                        //if (m_dMaxVoltage.HasValue && m_dMinVoltage.HasValue)
+                        //{
+                        //    if (m_dMaxVoltage != m_dMinVoltage)
+                        //    {
+                        //        offset = (float)(m_dMaxVoltage - m_dMinVoltage) * 0.1f;
+                        //    }
+                        //    else
+                        //    {
+                        //        offset = (float)m_dMaxVoltage / 2;
+                        //    }
+                        //    m_chartAreaDefault.AxisY2.Maximum = (double)((float)m_dMaxVoltage + offset);
+                        //    m_chartAreaDefault.AxisY2.Minimum = (double)((float)m_dMinVoltage - offset);
+                        //    if (m_chartAreaDefault.AxisY2.Maximum <= m_chartAreaDefault.AxisY2.Minimum)
+                        //    {
+                        //        double a = m_chartAreaDefault.AxisY2.Minimum;
+                        //        m_chartAreaDefault.AxisY2.Minimum =  m_chartAreaDefault.AxisY2.Maximum;
+                        //        m_chartAreaDefault.AxisY2.Maximum = a;
+                        //    }
 
-                            if (offset == 0)
-                            {
-                                m_chartAreaDefault.AxisY2.Maximum = m_chartAreaDefault.AxisY2.Minimum + 10; //人为赋值
-                            }
-                            m_chartAreaDefault.AxisY2.Enabled = AxisEnabled.True;
-                        }
-                        else
-                        {
-                            // 没有流量数据
-                            // 人为流量最大最小值
-                            m_chartAreaDefault.AxisY2.Maximum = (double)100;
-                            m_chartAreaDefault.AxisY2.Minimum = (double)0;
-                            m_chartAreaDefault.AxisY2.Enabled = AxisEnabled.False;
-                        }
+                        //    if (offset == 0)
+                        //    {
+                        //        m_chartAreaDefault.AxisY2.Maximum = m_chartAreaDefault.AxisY2.Minimum + 10; //人为赋值
+                        //    }
+                        //    m_chartAreaDefault.AxisY2.Enabled = AxisEnabled.True;
+                        //}
+                        //else
+                        //{
+                        //    // 没有流量数据
+                        //    // 人为流量最大最小值
+                        //    m_chartAreaDefault.AxisY2.Maximum = (double)100;
+                        //    m_chartAreaDefault.AxisY2.Minimum = (double)0;
+                        //    m_chartAreaDefault.AxisY2.Enabled = AxisEnabled.False;
+                        //}
                         // 设置日期最大值和最小值
                         m_chartAreaDefault.AxisX.Minimum = m_minDateTime.Value.ToOADate();
                         m_chartAreaDefault.AxisX.Maximum = m_maxDateTime.Value.ToOADate();
                         this.DataBind(); //更新数据到图表
                     }
-                }
+                
             }
                 catch(Exception e){
                     Debug.WriteLine("gm" + e.Message);
@@ -338,11 +340,11 @@ namespace Hydrology.CControls
 
         public bool SetFilter(string iStationId, DateTime timeStart, DateTime timeEnd)
         {
+            //this.InitUI();
             m_annotation.Visible = false;
             ClearAllDatas();
-            List<CEntitySoilData> listDatas = m_proxySoilData.QueryByStationAndTime(iStationId, timeStart, timeEnd);
-            int rowcount = listDatas.Count;
-            if (rowcount > CI_Chart_Max_Count)
+            List<CEntityWaterSpeed> listDatas = m_proxyWaterSpeed.QueryByTime(iStationId, timeStart, timeEnd);
+            if (listDatas.Count > CI_Chart_Max_Count)
             {
                 // 数据量太大，退出绘图
                 MessageBox.Show("查询结果集太大，自动退出绘图");
@@ -350,11 +352,24 @@ namespace Hydrology.CControls
             }
             AddSoilData(listDatas); //显示图形
             return true;
+            //m_annotation.Visible = false;
+            //ClearAllDatas();
+            //List<CEntitySoilData> listDatas = m_proxySoilData.QueryByStationAndTime(iStationId, timeStart, timeEnd);
+            //int rowcount = listDatas.Count;
+            //if (rowcount > CI_Chart_Max_Count)
+            //{
+            //    // 数据量太大，退出绘图
+            //    MessageBox.Show("查询结果集太大，自动退出绘图");
+            //    return false;
+            //}
+            //AddSoilData(listDatas); //显示图形
+            //return true;
         }
 
         public void InitDataSource(ISoilDataProxy proxy)
         {
             m_proxySoilData = proxy;
+            m_proxyWaterSpeed = new CSQLWaterSpeed();
         }
 
 
@@ -366,22 +381,22 @@ namespace Hydrology.CControls
             base.InitContextMenu();
             m_MI_M10 = new MenuItem() { Text = "10CM含水率", Checked = true };
             m_MI_M20 = new MenuItem() { Text = "20CM含水率", Checked = true };
-            // m_MI_M30 = new MenuItem() { Text = "30CM含水率", Checked = true };
+            m_MI_M30 = new MenuItem() { Text = "30CM含水率", Checked = true };
             m_MI_M40 = new MenuItem() { Text = "40CM含水率", Checked = true };
-            m_MI_Voltage = new MenuItem() { Text = "电压值", Checked = true };
+            //m_MI_Voltage = new MenuItem() { Text = "电压值", Checked = true };
             // m_MI_M60 = new MenuItem() { Text = "60CM含水率", Checked = true };
             base.m_contextMenu.MenuItems.Add(0, m_MI_M10);
             base.m_contextMenu.MenuItems.Add(0, m_MI_M20);
-            //  base.m_contextMenu.MenuItems.Add(0, m_MI_M30);
+            base.m_contextMenu.MenuItems.Add(0, m_MI_M30);
             base.m_contextMenu.MenuItems.Add(0, m_MI_M40);
-            base.m_contextMenu.MenuItems.Add(0, m_MI_Voltage);
+            //base.m_contextMenu.MenuItems.Add(0, m_MI_Voltage);
             //  base.m_contextMenu.MenuItems.Add(0, m_MI_M60);
 
             m_MI_M10.Click += new EventHandler(EH_MI_M10_Click);
             m_MI_M20.Click += new EventHandler(EH_MI_M20_Click);
-            //   m_MI_M30.Click += new EventHandler(EH_MI_M30_Click);
+            //m_MI_M30.Click += new EventHandler(EH_MI_M30_Click);
             m_MI_M40.Click += new EventHandler(EH_MI_M40_Click);
-            m_MI_Voltage.Click += new EventHandler(EH_MI_Voltage_Click);
+            //m_MI_Voltage.Click += new EventHandler(EH_MI_Voltage_Click);
             //  m_MI_M60.Click += new EventHandler(EH_MI_M60_Click);
         }
 
@@ -394,11 +409,11 @@ namespace Hydrology.CControls
 
             // 设置水位和流量格式
             m_chartAreaDefault.AxisY.LabelStyle.Format = "0.00";
-            m_chartAreaDefault.AxisY2.LabelStyle.Format = "0.00";
+            //m_chartAreaDefault.AxisY2.LabelStyle.Format = "0.00";
 
             // m_chartAreaDefault.AxisX.Title = CS_Asix_DateTime; //不显示名字
             m_chartAreaDefault.AxisY.Title = CS_AsixY_Name;
-            m_chartAreaDefault.AxisY2.Title = CS_AsixY2_name;
+            //m_chartAreaDefault.AxisY2.Title = CS_AsixY2_name;
 
             m_serialM10 = AddSerial(CS_Serial_Name_M10);
             m_serialM10.YValueMembers = CS_CN_M10;
@@ -408,19 +423,19 @@ namespace Hydrology.CControls
             m_serialM20.YValueMembers = CS_CN_M20;
             m_serialM20.Color = Color.Blue;
 
-            //m_serialM30 = AddSerial(CS_Serial_Name_M30);
-            //m_serialM30.YValueMembers = CS_CN_M30;
-            //m_serialM30.Color = Color.Green;
+            m_serialM30 = AddSerial(CS_Serial_Name_M30);
+            m_serialM30.YValueMembers = CS_CN_M30;
+            m_serialM30.Color = Color.Green;
 
             m_serialM40 = AddSerial(CS_Serial_Name_M40);
             m_serialM40.YValueMembers = CS_CN_M40;
             m_serialM40.Color = Color.FromArgb(205, 92, 197);
 
-            m_serialVoltage = AddSerial(CS_Serial_Name_Votage);
-            m_serialVoltage.Color = Color.Green;
+            //m_serialVoltage = AddSerial(CS_Serial_Name_Votage);
+            //m_serialVoltage.Color = Color.Green;
             //m_serialVoltage.XValueMember = CS_CN_DateTime;
-            m_serialVoltage.YValueMembers = CS_CN_Voltage;
-            m_serialVoltage.YAxisType = AxisType.Secondary;
+            //m_serialVoltage.YValueMembers = CS_CN_Voltage;
+            //m_serialVoltage.YAxisType = AxisType.Secondary;
             //m_serialM60 = AddSerial(CS_Serial_Name_M60);
             //m_serialM60.YValueMembers = CS_CN_M60;
             //m_serialM60.Color = Color.LightSkyBlue;
@@ -453,11 +468,11 @@ namespace Hydrology.CControls
             DateTime dateTimeX = DateTime.FromOADate(point.XValue);
             //if (m_serialM10.Points.Contains(point))
             //{
-            if (m_serialVoltage.Points.Contains(point))
+            if (false)
             {
-                prompt = string.Format("电压：{0:0.00}\n日期：{1}\n时间：{2}", point.YValues[0],
-                        dateTimeX.ToString("yyyy-MM-dd"),
-                        dateTimeX.ToString("HH:mm:ss"));
+                //prompt = string.Format("电压：{0:0.00}\n日期：{1}\n时间：{2}", point.YValues[0],
+                //        dateTimeX.ToString("yyyy-MM-dd"),
+                //        dateTimeX.ToString("HH:mm:ss"));
             }
             else
             {
@@ -499,7 +514,7 @@ namespace Hydrology.CControls
         private void EH_MI_Voltage_Click(object sender, EventArgs e)
         {
             m_MI_Voltage.Checked = !m_MI_Voltage.Checked;
-            m_serialVoltage.Enabled = m_MI_Voltage.Checked;
+            //m_serialVoltage.Enabled = m_MI_Voltage.Checked;
         }
         private void EH_MI_M20_Click(object sender, EventArgs e)
         {

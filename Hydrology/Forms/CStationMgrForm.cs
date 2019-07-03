@@ -876,8 +876,11 @@ namespace Hydrology.Forms
                 this.Focus(); //防止窗体最小化
             }
         }
-       
-     
+
+        private void btn_fresh_Click(object sender, EventArgs e)
+        {
+            CDBDataMgr.Instance.UpdateAllStation();
+        }
     }
 }
 

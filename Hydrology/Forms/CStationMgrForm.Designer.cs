@@ -49,6 +49,7 @@
             this.textBox_Search = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.btn_fresh = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.tableLayoutPanel.SuspendLayout();
@@ -69,7 +70,8 @@
             this.tsButExit,
             this.tsButImport,
             this.tsButAdd,
-            this.tsButDelete});
+            this.tsButDelete,
+            this.btn_fresh});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -283,6 +285,17 @@
             this.label2.Text = "墒情站列表";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btn_fresh
+            // 
+            this.btn_fresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btn_fresh.Image = ((System.Drawing.Image)(resources.GetObject("btn_fresh.Image")));
+            this.btn_fresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_fresh.Name = "btn_fresh";
+            this.btn_fresh.Size = new System.Drawing.Size(39, 42);
+            this.btn_fresh.Text = "toolStripButton1";
+            this.btn_fresh.ToolTipText = "刷新";
+            this.btn_fresh.Click += new System.EventHandler(this.btn_fresh_Click);
+            // 
             // CStationMgrForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -327,6 +340,6 @@
         private System.Windows.Forms.Label labelUserCount;
         private System.Windows.Forms.ComboBox cmb_SubCenter;
         private System.Windows.Forms.Label label4;
-
+        private System.Windows.Forms.ToolStripButton btn_fresh;
     }
 }

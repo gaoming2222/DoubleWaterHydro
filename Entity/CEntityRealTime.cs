@@ -61,6 +61,36 @@ namespace Hydrology.Entity
         [XmlElement("wateryield")]
         public Nullable<Decimal> DWaterYield { get; set; }
 
+        /// <summary>
+        /// 流速1
+        /// </summary>
+        [XmlElement("DV1")]
+        public Nullable<Decimal> DV1 { get; set; }
+
+
+        /// <summary>
+        /// 流速2
+        /// </summary>
+        [XmlElement("DV2")]
+        public Nullable<Decimal> DV2 { get; set; }
+
+
+        /// <summary>
+        /// 流速3
+        /// </summary>
+        [XmlElement("DV3")]
+        public Nullable<Decimal> DV3 { get; set; }
+
+
+        /// <summary>
+        /// 流速4
+        /// </summary>
+        [XmlElement("DV4")]
+        public Nullable<Decimal> DV4 { get; set; }
+
+
+
+
         // 电压
         [XmlElement("voltage")]
         public Nullable<Decimal> Dvoltage { get; set; }

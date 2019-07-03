@@ -8,6 +8,8 @@ using System.Data;
 using Hydrology.Forms;
 using Hydrology.Utils;
 using Hydrology.DataMgr;
+using DBManager.Interface;
+using Entity;
 
 namespace Hydrology.CControls
 {
@@ -22,6 +24,13 @@ namespace Hydrology.CControls
         public static readonly string CS_StationName = "站名";
         public static readonly string CS_TimeCollected = "采集时间";
         public static readonly string CS_WaterStage = "水位";
+
+        public static readonly string CS_V1 = "流速1";
+        public static readonly string CS_V2 = "流速2";
+        public static readonly string CS_V3 = "流速3";
+        public static readonly string CS_V4 = "流速4";
+
+
         public static readonly string CS_WaterFlow = "相应流量";
 
         public static readonly string CS_TimeReceived = "接收时间";
@@ -44,6 +53,7 @@ namespace Hydrology.CControls
 
         // 查询相关信息
         private IWaterProxy m_proxyWater;   //水量表的操作接口
+        private IWaterSpeedProxy m_proxySpeedWater;   //水量表的操作接口
         private string m_strStaionId;            //查询的测站ID
         private DateTime m_dateTimeStart;   //查询的起点日期
         private DateTime m_dateTimeEnd;     //查询的起点日期
@@ -67,7 +77,7 @@ namespace Hydrology.CControls
             // 设定标题栏,默认有个隐藏列,默认非编辑模式
             this.Header = new string[] 
             { 
-                CS_StationID,CS_StationName,CS_TimeCollected, CS_WaterStage, CS_WaterFlow ,CS_DataState ,CS_TimeReceived, CS_ChannelType, CS_MsgType 
+                CS_StationID,CS_StationName,CS_TimeCollected, CS_WaterStage,CS_V1,CS_V2,CS_V3,CS_V4, CS_WaterFlow ,CS_DataState ,CS_TimeReceived, CS_ChannelType, CS_MsgType 
             };
 
             // 设置一页的数量
@@ -87,13 +97,14 @@ namespace Hydrology.CControls
         /// 初始化数据来源，绑定与数据库的数据
         /// </summary>
         /// <param name="proxy"></param>
-        public void InitDataSource(IWaterProxy proxy)
+        public void InitDataSource(IWaterSpeedProxy proxy)
         {
-            m_proxyWater = proxy;
+            ///m_proxyWater = proxy;
+            m_proxySpeedWater = proxy;
         }
 
         // 设置显示的雨量记录
-        public void SetWaters(List<CEntityWater> listWater)
+        public void SetWaters(List<CEntityWaterSpeed> listWaterSpeed)
         {
             // 清空所有数据,是否一定要这样？好像可以考虑其它方式
             base.m_dataTable.Rows.Clear();
@@ -104,101 +115,38 @@ namespace Hydrology.CControls
             {
                 string[] newRow;
                 // 只读模式
-                for (int i = 0; i < listWater.Count; ++i)
+                for (int i = 0; i < listWaterSpeed.Count; ++i)
                 {
                     EDataState state = EDataState.ENormal; //默认所有数据都是正常的
                     string strStationName = "";
                     string strStationId = "";
                     string state_1 = CS_DataState_Normal;
-                    CEntityStation station = CDBDataMgr.Instance.GetStationById(listWater[i].StationID);
+                    CEntityStation station = CDBDataMgr.Instance.GetStationById(listWaterSpeed[i].STCD);
                     if (null != station)
                     {
 
                         strStationName = station.StationName;
                         strStationId = station.StationID;
                     }
-                    if (listWater[i].state == 0)
-                    {
-                        // 不正常
-                        state = CExDataGridView.EDataState.EError;//红色显示 
-                        state_1 = CS_DataState_AbNormal;
-                    }              
-                   //水位可以小于0,流量不行
-                    //if (listWater[i].WaterFlow < 0 && listWater[i].WaterStage !=-9999)
-                    //{
-                    //    newRow = new string[]
-                    //        {
-                    //            strStationId,
-                    //            strStationName,/*站名*/
-                    //            listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                    //            listWater[i].WaterStage.ToString(), /*水位*/
-                    //             "--",
-                    //            listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                    //            CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                    //            CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    //        };
-                    //}
-                    if (listWater[i].WaterStage == -9999 && listWater[i].WaterFlow > 0)
-                    {
-                        newRow = new string[]
-                    {
+                    newRow = new string[]
+                 {
                         strStationId,
                         strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        "--", /*水位*/
-                        listWater[i].WaterFlow.HasValue?listWater[i].WaterFlow.Value.ToString():"", /*流量*/
+                        listWaterSpeed[i].DT.ToString(CS_TimeFormat), /*采集时间*/
+                        listWaterSpeed[i].W1.ToString(), /*水位*/
+                        listWaterSpeed[i].AvgV1.ToString(), /*水位*/
+                        listWaterSpeed[i].AvgV2.ToString(), /*水位*/
+                        listWaterSpeed[i].AvgV3.ToString(), /*水位*/
+                        listWaterSpeed[i].AvgV4.ToString(), /*水位*/
+                        listWaterSpeed[i].Q.ToString(), /*流量*/
                         state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    };
-                    }
-                    else if (listWater[i].WaterStage !=-9999 && listWater[i].WaterFlow < 0)
-                    {
-                        newRow = new string[]
-                    {
-                        strStationId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        listWater[i].WaterStage.ToString(), /*水位*/
-                         "--",
-                        state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    };
-                    }
-                    else if (listWater[i].WaterStage ==-9999 && listWater[i].WaterFlow < 0)
-                    {
-                        newRow = new string[]
-                    {
-                        strStationId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        "--",
-                        "--",
-                        state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    };
-                    }
-                    else
-                    {
-                        newRow = new string[]
-                    {
-                        m_strStaionId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        listWater[i].WaterStage.ToString(), /*水位*/
-                        listWater[i].WaterFlow.ToString(), /*流量*/
-                        state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType), /*报文类型*/
-                //        listWater[i].WaterID.ToString() /*水量ID*/
-                    };
-                    }
+                        listWaterSpeed[i].RevtDT.ToString(CS_TimeFormat), /*接收时间*/
+                        CEnumHelper.ChannelTypeToUIStr(listWaterSpeed[i].ChannelType), /*通讯方式*/
+                        CEnumHelper.MessageTypeToUIStr(listWaterSpeed[i].MessageType), /*报文类型*/
+                 };
+
+
+
                     newRows.Add(newRow);
                     states.Add(state);
                 }
@@ -207,139 +155,47 @@ namespace Hydrology.CControls
             }
             else
             {
-                string[] newRow;
-                // 编辑模式，需要将更新的数据和删除的数据，与当前数据进行合并
-                for (int i= 0; i < listWater.Count; ++i)
-                {
-                    EDataState state = EDataState.ENormal; //默认所有数据都是正常的
-                    string strStationName = "";
-                    string state_1 = CS_DataState_Normal;
-                    CEntityStation station = CDBDataMgr.Instance.GetStationById(listWater[i].StationID);
-                    if (null != station)
-                    {
-                        strStationName = station.StationName;
-                    }
-                    if (listWater[i].state == 0)
-                    {
-                        // 不正常
-                        state = CExDataGridView.EDataState.EError;//红色显示 
-                        state_1 = CS_DataState_AbNormal;
-                    }   
-                //    string[] newRow = new string[]
-                //    {
-                //        "False", /*未选中*/
-                //        m_strStaionId,
-                //        strStationName,/*站名*/
-                //        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                //        listWater[i].WaterStage.ToString(), /*水位*/
-                //        listWater[i].WaterFlow.ToString(), /*流量*/
-                //        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                //        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                //        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType), /*报文类型*/
-                ////        listWater[i].WaterID.ToString() /*水量ID*/
-                //    };
-                  
-                    if (listWater[i].WaterStage == -9999 && listWater[i].WaterFlow > 0)
-                    {
-                        newRow = new string[]
-                    {
-                        "False", /*未选中*/
-                        m_strStaionId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        "", /*水位*/
-                        listWater[i].WaterFlow.HasValue?listWater[i].WaterFlow.Value.ToString():"", /*流量*/
-                        state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    };
-                    }
-                    else if (listWater[i].WaterStage != -9999 && listWater[i].WaterFlow < 0)
-                    {
-                        newRow = new string[]
-                    {
-                       "False", /*未选中*/
-                        m_strStaionId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        listWater[i].WaterStage.ToString(), /*水位*/
-                         "",
-                         state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    };
-                    }
-                    else if (listWater[i].WaterStage == -9999 && listWater[i].WaterFlow < 0)
-                    {
-                        newRow = new string[]
-                    {
-                       "False", /*未选中*/
-                        m_strStaionId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        "",
-                        "",
-                        state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType) /*报文类型*/
-                    };
-                    }
-                    else
-                    {
-                        newRow = new string[]
-                    {
-                         "False", /*未选中*/
-                        m_strStaionId,
-                        strStationName,/*站名*/
-                        listWater[i].TimeCollect.ToString(CS_TimeFormat), /*采集时间*/
-                        listWater[i].WaterStage.ToString(), /*水位*/
-                        listWater[i].WaterFlow.ToString(), /*流量*/
-                        state_1,
-                        listWater[i].TimeRecieved.ToString(CS_TimeFormat), /*接收时间*/
-                        CEnumHelper.ChannelTypeToUIStr(listWater[i].ChannelType), /*通讯方式*/
-                        CEnumHelper.MessageTypeToUIStr(listWater[i].MessageType), /*报文类型*/
-                //        listWater[i].WaterID.ToString() /*水量ID*/
-                    };
-                    }
-                    newRows.Add(newRow);
-                    states.Add(state);
-                   
-                }
+                
                 // 添加到集合的数据表中
                 base.AddRowRange(newRows, states);
             }
-
-            
-           
         }
 
         // 设置查询条件
         public bool SetFilter(string strStationId, DateTime timeStart, DateTime timeEnd, bool TimeSelect)
         {
-            ClearAllState();
-            m_strStaionId = strStationId;
-            m_dateTimeStart = timeStart;
-            m_dateTimeEnd = timeEnd;
-            m_proxyWater.SetFilter(strStationId, timeStart, timeEnd, TimeSelect);
-            if (-1 == m_proxyWater.GetPageCount())
+            List<CEntityWaterSpeed> listWaterSpeed = new List<CEntityWaterSpeed>();
+            List<CEntityWaterSpeed> listSharpClockWaterSpeed = new List<CEntityWaterSpeed>();
+            try
             {
-                // 查询失败
+                listWaterSpeed = m_proxySpeedWater.QueryByTime(strStationId, timeStart, timeEnd);
+                if(listWaterSpeed == null || listWaterSpeed.Count == 0)
+                {
+                    MessageBox.Show("数据库忙，查询失败，请稍后再试！");
+                    return false;
+                }
+                else
+                {
+                    if (TimeSelect)
+                    {
+                        for(int i = 0;i< listWaterSpeed.Count; i++)
+                        {
+                            if(listWaterSpeed[i].DT.Minute == 0 && listWaterSpeed[i].DT.Second == 0)
+                            {
+                                listSharpClockWaterSpeed.Add(listWaterSpeed[i]);
+                            }
+                        }
+                        SetWaters(listSharpClockWaterSpeed);
+                        return true;
+                    }
+                    SetWaters(listWaterSpeed);
+                    return true;
+                }
+            }catch(Exception eee)
+            {
                 MessageBox.Show("数据库忙，查询失败，请稍后再试！");
                 return false;
             }
-            else
-            {
-                // 并查询数据，显示第一页
-                this.OnMenuFirstPage(this, null);
-                base.TotalPageCount = m_proxyWater.GetPageCount();
-                base.TotalRowCount = m_proxyWater.GetRowCount();
-                SetWaters(m_proxyWater.GetPageData(1));
-                return true;
-            }
-
         }
 
         // 添加电压记录
@@ -392,7 +248,7 @@ namespace Hydrology.CControls
                     //MessageBox.Show("保存失败");
                     return false;
                 }
-                SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
             }
             else
             {
@@ -474,14 +330,14 @@ namespace Hydrology.CControls
                 // 报文类型，不可编辑
 
                 // 设置删除列的宽度
-                this.Columns[0].Width = 40; //删除列宽度为20
-                this.Columns[3].Width = 125;
-                this.Columns[7].Width = 125;
+                //this.Columns[0].Width = 40; //删除列宽度为20
+                //this.Columns[3].Width = 125;
+                //this.Columns[7].Width = 125;
             }
             else
             {
-                this.Columns[2].Width = 125;
-                this.Columns[5].Width = 125;
+                //this.Columns[2].Width = 125;
+                //this.Columns[5].Width = 125;
             }
         }
 
@@ -583,7 +439,7 @@ namespace Hydrology.CControls
                     }
                     MessageBox.Show("保存成功");
                     // 保存成功，换页
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage - 1));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage - 1));
                     base.OnMenuPreviousPage(sender, e);
                 }
                 else if (DialogResult.No == result)
@@ -591,14 +447,14 @@ namespace Hydrology.CControls
                     //不保存，直接换页，直接退出
                     //清楚所有状态位
                     base.ClearAllState();
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage - 1));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage - 1));
                     base.OnMenuPreviousPage(sender, e);
                 }
             }
             else
             {
                 // 没有修改，直接换页
-                SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage - 1));
+                //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage - 1));
                 base.OnMenuPreviousPage(sender, e);
             }
             
@@ -626,7 +482,7 @@ namespace Hydrology.CControls
                     }
                     MessageBox.Show("保存成功");
                     // 保存成功，换页
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage + 1));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage + 1));
                     base.OnMenuNextPage(sender, e);
                 }
                 else if (DialogResult.No == result)
@@ -634,14 +490,14 @@ namespace Hydrology.CControls
                     //不保存，直接换页，直接退出
                     //清楚所有状态位
                     base.ClearAllState();
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage + 1));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage + 1));
                     base.OnMenuNextPage(sender, e);
                 }
             }
             else
             {
                 // 没有修改，直接换页
-                SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage + 1));
+                //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage + 1));
                 base.OnMenuNextPage(sender, e);
             }
         }
@@ -672,7 +528,7 @@ namespace Hydrology.CControls
                     MessageBox.Show("保存成功");
                     // 保存成功，换页
                     base.OnMenuFirstPage(sender, e);
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
                     this.UpdateDataToUI();
                 }
                 else if (DialogResult.No == result)
@@ -681,7 +537,7 @@ namespace Hydrology.CControls
                     //清楚所有状态位
                     base.ClearAllState();
                     base.OnMenuFirstPage(sender, e);
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
                     this.UpdateDataToUI();
                 }
             }
@@ -689,7 +545,7 @@ namespace Hydrology.CControls
             {
                 // 没有修改，直接换页
                 base.OnMenuFirstPage(sender, e);
-                SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
                 this.UpdateDataToUI();
             }
             
@@ -723,7 +579,7 @@ namespace Hydrology.CControls
                         MessageBox.Show("保存成功");
                         // 保存成功，换页
                         base.OnMenuFirstPage(sender, e);
-                        SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                        //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
                         this.UpdateDataToUI();
                     }
                 }
@@ -733,7 +589,7 @@ namespace Hydrology.CControls
                     //清楚所有状态位
                     base.ClearAllState();
                     base.OnMenuLastPage(sender, e);
-                    SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                    //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
                     this.UpdateDataToUI();
                 }
             }
@@ -741,7 +597,7 @@ namespace Hydrology.CControls
             {
                 // 没有修改，直接换页
                 base.OnMenuLastPage(sender, e);
-                SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
+                //SetWaters(m_proxyWater.GetPageData(base.m_iCurrentPage));
                 this.UpdateDataToUI();
             }
         }

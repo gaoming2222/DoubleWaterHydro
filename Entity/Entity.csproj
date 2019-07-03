@@ -58,6 +58,7 @@
     <Compile Include="CEntityWarningInfo.cs" />
     <Compile Include="CEntityWater.cs" />
     <Compile Include="CEntityWaterFlowMap.cs" />
+    <Compile Include="CEntityWaterSpeed.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Protocol\Channel\HDModemDataStruct.cs" />
     <Compile Include="Protocol\Channel\HDModemInfoStruct.cs" />

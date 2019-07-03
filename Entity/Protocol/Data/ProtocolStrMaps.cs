@@ -341,6 +341,20 @@ namespace Hydrology.Entity
             return newStr.Length > 0;
         }
 
+        public static bool DeleteSpecialCharLong(string oldStr, out string newStr)
+        {
+            //  删除起始符 '$'
+            if (oldStr.StartsWith(CSpecialChars.DOLLAR_CHAR.ToString()))
+                oldStr = oldStr.Substring(1);
+            //  删除结束符 '\r'
+            if (oldStr.EndsWith(CSpecialChars.ENTER_CHAR.ToString()))
+                oldStr = oldStr.Replace(CSpecialChars.ENTER_CHAR, CSpecialChars.BALNK_CHAR);
+            //  删除起始位置的空字符 ' '
+            //oldStr = oldStr.Trim();
+            newStr = oldStr;
+            return newStr.Length > 0;
+        }
+
         public static readonly string LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789.@_-";
         public static bool isLegalCharacters(string sExt)
         {

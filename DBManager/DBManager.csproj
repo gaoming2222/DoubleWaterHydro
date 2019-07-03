@@ -64,6 +64,7 @@
     <Compile Include="DB\SQLServer\CSQLWarningInfo.cs" />
     <Compile Include="DB\SQLServer\CSQLWater.cs" />
     <Compile Include="DB\SQLServer\CSQLWaterFlowMap.cs" />
+    <Compile Include="DB\SQLServer\CSQLWaterSpeed.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interface\ICurrentDataProxy.cs" />
     <Compile Include="Interface\IMultiThread.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Interface\IWarningInfoProxy.cs" />
     <Compile Include="Interface\IWaterFlowMapProxy.cs" />
     <Compile Include="Interface\IWaterProxy.cs" />
+    <Compile Include="Interface\IWaterSpeedProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

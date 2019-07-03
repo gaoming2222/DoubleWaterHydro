@@ -14,9 +14,10 @@ namespace Hydrology.Forms
     {
         #region 静态常量
         private static readonly string CS_CMB_Rain = "雨量";
-        private static readonly string CS_CMB_Water = "水位";
+        private static readonly string CS_CMB_Water = "流速数据";
         private static readonly string CS_CMB_Voltage = "电压";
         private static readonly string CS_CMB_SoilData = "墒情数据";
+        private static readonly string CS_CMB_SpeedData = "流速数据";
 
         private static readonly string CS_CMB_ViewStyle_All = "图表";
         private static readonly string CS_CMB_ViewStyle_Table = "表格";
@@ -25,6 +26,8 @@ namespace Hydrology.Forms
         private static readonly string CS_CMB_RainShape_Periodrain = "时段雨量";
         private static readonly string CS_CMB_RainShape_Differencerain = "差值雨量";
         private static readonly string CS_CMB_ViewStyle_Dayrain = "日雨量";
+        private static readonly string CS_CMB_ViewStyle_Speed = "流速";
+        private static readonly string CS_CMB_ViewStyle_WaterFlow = "水位流量";
 
         private static readonly string CS_CMB_AllData = "全部数据";
         private static readonly string CS_CMB_TimeData = "整点数据";
@@ -137,11 +140,11 @@ namespace Hydrology.Forms
             // 初始化测站
             // 初始化查询信息类型
             this.SuspendLayout();
-            cmbQueryInfo.Items.AddRange(new string[] { CS_CMB_Rain, CS_CMB_Water, CS_CMB_Voltage });
+            cmbQueryInfo.Items.AddRange(new string[] {CS_CMB_Water});
 
-            cmb_RainShape.Items.AddRange(new string[] { CS_CMB_RainShape_Periodrain, CS_CMB_RainShape_Differencerain, CS_CMB_ViewStyle_Dayrain });
+            cmb_RainShape.Items.AddRange(new string[] {CS_CMB_ViewStyle_WaterFlow, CS_CMB_ViewStyle_Speed });
 
-            cmb_TimeSelect.Items.AddRange(new string[] { CS_CMB_TimeData, CS_CMB_AllData });
+            cmb_TimeSelect.Items.AddRange(new string[] { CS_CMB_AllData,CS_CMB_TimeData});
             // 设置日期
             this.dtpTimeStart.Format = DateTimePickerFormat.Custom;
             this.dptTimeEnd.Format = DateTimePickerFormat.Custom;
@@ -371,7 +374,7 @@ namespace Hydrology.Forms
         {
             // 考虑真的要用单例吗
             m_dgvRain.InitDataSource(CDBDataMgr.GetInstance().GetRainProxy());
-            m_dgvWater.InitDataSource(CDBDataMgr.GetInstance().GetWaterProxy());
+            m_dgvWater.InitDataSource(CDBDataMgr.GetInstance().GetWaterSpeedProxy());
             m_dgvVoltage.InitDataSource(CDBDataMgr.GetInstance().GetVoltageProxy());
             m_dgvSoilData.InitDataSource(CDBSoilDataMgr.Instance.GetSoilDataProxy());
 
@@ -504,8 +507,8 @@ namespace Hydrology.Forms
                 m_chartVoltage.Hide();
                 m_chartWaterFlow.Show();
                 m_charSoilData.Hide();
-                this.label6.Hide();
-                this.cmb_RainShape.Hide();
+                this.label6.Show();
+                this.cmb_RainShape.Show();
             }
             else if (cmbQueryInfo.Text.Equals(CS_CMB_Voltage))
             {
@@ -725,7 +728,15 @@ namespace Hydrology.Forms
                 }
                 if (m_dgvWater.SetFilter(stationId, dtpTimeStart.Value, dptTimeEnd.Value, TimeSelect))
                 {
-                    m_chartWaterFlow.SetFilter(stationId, dtpTimeStart.Value, dptTimeEnd.Value, TimeSelect);
+                    if(cmb_RainShape.SelectedIndex == 0)
+                    {
+                        m_chartWaterFlow.SetFilter(stationId, dtpTimeStart.Value, dptTimeEnd.Value, TimeSelect);
+                    }
+                    if (cmb_RainShape.SelectedIndex == 1)
+                    {
+                        m_charSoilData.SetFilter(stationId, dtpTimeStart.Value, dptTimeEnd.Value);
+                    }
+
                 }
                 m_dgvWater.UpdateDataToUI();
                 #endregion 水位
@@ -873,19 +884,19 @@ namespace Hydrology.Forms
 
         public void InitWaterStage()
         {
-            Random random = new Random();
-            DateTime currentDate = DateTime.Now.Date;
-            List<CEntityWater> lists = new List<CEntityWater>();
-            for (int i = 0; i < 24 * 10; ++i)
-            {
-                CEntityWater water = new CEntityWater();
-                water.TimeCollect = currentDate;
-                water.WaterStage = (decimal)random.NextDouble() + 100;
-                water.WaterFlow = (decimal)random.NextDouble() * 10;
-                currentDate = currentDate.AddHours(1).AddMinutes(5).AddSeconds(1);
-                lists.Add(water);
-            }
-            m_chartWaterFlow.AddWaters(lists);
+            //Random random = new Random();
+            //DateTime currentDate = DateTime.Now.Date;
+            //List<CEntityWater> lists = new List<CEntityWater>();
+            //for (int i = 0; i < 24 * 10; ++i)
+            //{
+            //    CEntityWater water = new CEntityWater();
+            //    water.TimeCollect = currentDate;
+            //    water.WaterStage = (decimal)random.NextDouble() + 100;
+            //    water.WaterFlow = (decimal)random.NextDouble() * 10;
+            //    currentDate = currentDate.AddHours(1).AddMinutes(5).AddSeconds(1);
+            //    lists.Add(water);
+            //}
+            //m_chartWaterFlow.AddWaters(lists);
         }
         #endregion 测试数据
 
@@ -894,13 +905,38 @@ namespace Hydrology.Forms
         private void cmb_RainShape_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            //if (cmb_RainShape.Text.Equals("时段雨量"))
-            //{
-
-            //}
-            //else if (cmb_RainShape.Text.Equals("差值雨量"))
-            //{
-            //}
+            if (cmb_RainShape.Text.Equals(CS_CMB_ViewStyle_Speed))
+            {
+                //查询水量
+                m_dgvRain.Hide();
+                m_dgvWater.Show();
+                m_dgvVoltage.Hide();
+                m_dgvSoilData.Hide();
+                //tLayoutRight.Controls.Add(m_dgvWater, 0, 0);
+                // 图形
+                m_chartRain.Hide();
+                m_chartVoltage.Hide();
+                m_chartWaterFlow.Hide();
+                m_charSoilData.Show();
+                this.label6.Show();
+                this.cmb_RainShape.Show();
+            }
+            else if (cmb_RainShape.Text.Equals(CS_CMB_ViewStyle_WaterFlow))
+            {
+                //查询水量
+                m_dgvRain.Hide();
+                m_dgvWater.Show();
+                m_dgvVoltage.Hide();
+                m_dgvSoilData.Hide();
+                //tLayoutRight.Controls.Add(m_dgvWater, 0, 0);
+                // 图形
+                m_chartRain.Hide();
+                m_chartVoltage.Hide();
+                m_chartWaterFlow.Show();
+                m_charSoilData.Hide();
+                this.label6.Show();
+                this.cmb_RainShape.Show();
+            }
             //else if (cmb_RainShape.Text.Equals("日雨量"))
             //{
 

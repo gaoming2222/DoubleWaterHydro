@@ -157,6 +157,9 @@
     <Compile Include="CControls\CDataGridView\CDataGridViewWaterFlowMap.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CControls\CDataGridView\CDataGridViewWaterSpeed.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CControls\CDataGridView\CExDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -255,6 +258,7 @@
     <Compile Include="DataMgr\CPortDataMgr.cs" />
     <Compile Include="DataMgr\CSystemInfoMgr.cs" />
     <Compile Include="DataMgr\CWarningInfoMgr.cs" />
+    <Compile Include="DataMgr\QCal.cs" />
     <Compile Include="DataMgr\SystemTimeConfig.cs" />
     <Compile Include="DataMgr\XmlHelper.cs" />
     <Compile Include="Forms\CBatchFlashMgrForm.cs">
@@ -631,6 +635,7 @@
   <ItemGroup>
     <None Include="Resources\Image1.gif" />
     <None Include="Resources\水位.gif" />
+    <Content Include="Resources\refresh.png" />
     <Content Include="Resources\树\水位.gif" />
     <Content Include="Resources\树\水文.gif" />
     <Content Include="Resources\树\雨量.gif" />

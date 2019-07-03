@@ -26,6 +26,8 @@ namespace Hydrology.CControls
         public static readonly string CS_StationName = "站名";
         public static readonly string CS_SubCenterID = "分中心";
         public static readonly string CS_Stationtype = "站类";
+        public static readonly string CS_HWater = "高水位";
+        public static readonly string CS_LWater = "低水位";
         public static readonly string CS_WBase = "水位基值";
         public static readonly string CS_WMax = "水位上限";
         public static readonly string CS_WMin = "水位下限";
@@ -417,8 +419,9 @@ namespace Hydrology.CControls
                     cmb_StationType.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
                     //// 初始化站点类型
-                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERainFall));
-                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.ERiverWater));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EH));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EI));
+                    cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EO));
                     cmb_StationType.Items.Add(CEnumHelper.StationTypeToUIStr(EStationType.EHydrology));
                     base.SetColumnEditStyle(listHeader.IndexOf(CS_Stationtype), cmb_StationType);
 
@@ -1071,6 +1074,19 @@ namespace Hydrology.CControls
                         //gm 1103
                         subcerterName,s.DWaterBase.ToString(),s.DWaterMax.ToString(),s.DWaterMin.ToString(),
                         s.DWaterChange.ToString(),accuracy,s.DRainChange.ToString(),s.GSM.ToString(),
+                        s.GPRS.ToString(),s.BDSatellite.ToString(),s.BDMemberSatellite.ToString(),s.DVoltageMin.ToString(),
+                        s.Maintran.ToString(),s.Subtran.ToString(),s.DataProtocol.ToString(),CEnumHelper.WaterSensorTypeToUIStr(n),
+                        CEnumHelper.RainSensorTypeToUIStr(m),reportInterval.ToString()
+                    }, EDataState.ENormal);
+                    }
+                    else
+                    {
+                        base.AddRow(new string[]
+                    {
+                        "False",s.StationID.ToString(), s.StationName.ToString(),CEnumHelper.StationTypeToUIStr(s.StationType),
+                        //gm 1103
+                        subcerterName,"","","",
+                        "","","","",
                         s.GPRS.ToString(),s.BDSatellite.ToString(),s.BDMemberSatellite.ToString(),s.DVoltageMin.ToString(),
                         s.Maintran.ToString(),s.Subtran.ToString(),s.DataProtocol.ToString(),CEnumHelper.WaterSensorTypeToUIStr(n),
                         CEnumHelper.RainSensorTypeToUIStr(m),reportInterval.ToString()

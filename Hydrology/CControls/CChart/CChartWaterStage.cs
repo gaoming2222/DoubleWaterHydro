@@ -8,6 +8,9 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Hydrology.DBManager.Interface;
+using DBManager.Interface;
+using DBManager.DB.SQLServer;
+using Entity;
 
 namespace Hydrology.CControls
 {
@@ -27,7 +30,7 @@ namespace Hydrology.CControls
         public static readonly string CS_AsixY2_Name = "流量(m3/s)";
 
         // 图表名字
-        public static readonly string CS_Chart_Name = "水位流量过程线";
+        public static readonly string CS_Chart_Name = "水位-流量过程线";
 
         // 水位线条名字
         public static readonly string CS_Serial_Name_Water = "Serial_Water";
@@ -55,6 +58,7 @@ namespace Hydrology.CControls
         private MenuItem m_MIFlowSerial;  //流量
 
         private IWaterProxy m_proxyWaterFlow;
+        private IWaterSpeedProxy m_proxyWaterSpeed;
 
         public CChartWaterStage()
             : base()
@@ -65,80 +69,80 @@ namespace Hydrology.CControls
             base.m_dataTable.Columns.Add(CS_CN_Flow, typeof(Decimal));
         }
         // 外部添加水位流量接口
-        public void AddWaters(List<CEntityWater> waters)
+        public void AddWaters(List<CEntityWaterSpeed> waters)
         {
             m_dMinWaterStage = null;
             m_dMaxWaterStage = null;
-            foreach (CEntityWater water in waters)
+            foreach (CEntityWaterSpeed water in waters)
             {
             //    if (water.WaterStage > 0 && water.WaterFlow > 0)
-                if (water.WaterStage !=-200 )
+                if (water.W1 !=-200 )
                 {
 
                     // 判断水位最大值和最小值
                     if (m_dMinWaterStage.HasValue)
                     {
-                        m_dMinWaterStage = m_dMinWaterStage > water.WaterStage ? water.WaterStage : m_dMinWaterStage;
+                        m_dMinWaterStage = m_dMinWaterStage > water.W1 ? water.W1 : m_dMinWaterStage;
                     }
                     else
                     {
-                        m_dMinWaterStage = water.WaterStage;
+                        m_dMinWaterStage = water.W1;
                     }
                     if (m_dMaxWaterStage.HasValue)
                     {
-                        m_dMaxWaterStage = m_dMaxWaterStage < water.WaterStage ? water.WaterStage : m_dMaxWaterStage;
+                        m_dMaxWaterStage = m_dMaxWaterStage < water.W1 ? water.W1 : m_dMaxWaterStage;
                     }
                     else
                     {
-                        m_dMaxWaterStage = water.WaterStage;
+                        m_dMaxWaterStage = water.W1;
                     }
                 }
-                if (water.WaterFlow > 0)
+                if (water.Q > 0)
                 {
                     // 判断流量的最大值和最小值
                     if (m_dMinWaterFlow.HasValue)
                     {
-                        m_dMinWaterFlow = m_dMinWaterFlow > water.WaterFlow ? water.WaterFlow : m_dMinWaterFlow;
+                        m_dMinWaterFlow = m_dMinWaterFlow > water.Q ? water.Q : m_dMinWaterFlow;
                     }
                     else
                     {
-                        m_dMinWaterFlow = water.WaterFlow;
+                        m_dMinWaterFlow = water.Q;
                     }
                     if (m_dMaxWaterFlow.HasValue)
                     {
-                        m_dMaxWaterFlow = m_dMaxWaterFlow < water.WaterFlow ? water.WaterFlow : m_dMaxWaterFlow;
+                        m_dMaxWaterFlow = m_dMaxWaterFlow < water.Q ? water.Q : m_dMaxWaterFlow;
                     }
                     else
                     {
-                        m_dMaxWaterFlow = water.WaterFlow;
+                        m_dMaxWaterFlow = water.Q;
                     }
                 }
                 else
                 {
-                    water.WaterFlow = 0;
+                    water.Q = 0;
                 }
                     // 判断日期, 更新日期最大值和最小值
                     if (m_maxDateTime.HasValue)
                     {
-                        m_maxDateTime = m_maxDateTime < water.TimeCollect ? water.TimeCollect : m_maxDateTime;
+                        m_maxDateTime = m_maxDateTime < water.DT ? water.DT : m_maxDateTime;
                     }
                     else
                     {
-                        m_maxDateTime = water.TimeCollect;
+                        m_maxDateTime = water.DT;
                     }
                     if (m_minDateTime.HasValue)
                     {
-                        m_minDateTime = m_minDateTime > water.TimeCollect ? water.TimeCollect : m_minDateTime;
+                        m_minDateTime = m_minDateTime > water.DT ? water.DT : m_minDateTime;
                     }
                     else
                     {
-                        m_minDateTime = water.TimeCollect;
+                        m_minDateTime = water.DT;
                     }
 
-                    if (water.WaterStage != -200 && water.WaterFlow >=0)
+                    if (water.W1 != -200 && water.Q >=0)
                     {
                         //赋值到内部数据表中
-                        m_dataTable.Rows.Add(water.TimeCollect, water.WaterStage, water.WaterFlow);
+                        m_dataTable.Rows.Add(water.DT, water.W1, water.Q);
                        // m_dataTable.Rows.Add(water.TimeCollect, water.WaterStage);
                     }
                   //  if( water.WaterFlow != -200)
@@ -210,40 +214,50 @@ namespace Hydrology.CControls
         {
             m_annotation.Visible = false;
             ClearAllDatas();
-            m_proxyWaterFlow.SetFilter(iStationId, timeStart, timeEnd, TimeSelect);
-            if (-1 == m_proxyWaterFlow.GetPageCount())
+            m_dMaxWaterFlow = null;
+            m_dMaxWaterStage = null;
+            m_dMinWaterFlow = null;
+            m_dMinWaterStage = null;
+            List<CEntityWaterSpeed> listWaterSpeed = new List<CEntityWaterSpeed>();
+            List<CEntityWaterSpeed> listSharpClockWaterSpeed = new List<CEntityWaterSpeed>();
+            try
             {
-                // 查询失败
-                // MessageBox.Show("数据库忙，查询失败，请稍后再试！");
-                return false;
-            }
-            else
-            {
-                // 并查询数据，显示第一页
-                m_dMaxWaterFlow = null;
-                m_dMaxWaterStage = null;
-                m_dMinWaterFlow = null;
-                m_dMinWaterStage = null;
-                int iTotalPage = m_proxyWaterFlow.GetPageCount();
-                int rowcount = m_proxyWaterFlow.GetRowCount();
-                if (rowcount > CI_Chart_Max_Count)
+                listWaterSpeed = m_proxyWaterSpeed.QueryByTime(iStationId, timeStart, timeEnd);
+                if (listWaterSpeed == null || listWaterSpeed.Count == 0)
                 {
-                    // 数据量太大，退出绘图
-                    MessageBox.Show("查询结果集太大，自动退出绘图");
+                    MessageBox.Show("数据库忙，查询失败，请稍后再试！");
                     return false;
                 }
-                for (int i = 0; i < iTotalPage; ++i)
+                else
                 {
-                    // 查询所有的数据
-                    this.AddWaters(m_proxyWaterFlow.GetPageData(i + 1));
+                    if (TimeSelect)
+                    {
+                        for (int i = 0; i < listWaterSpeed.Count; i++)
+                        {
+                            if (listWaterSpeed[i].DT.Minute == 0 && listWaterSpeed[i].DT.Second == 0)
+                            {
+                                listSharpClockWaterSpeed.Add(listWaterSpeed[i]);
+                            }
+                        }
+                        this.AddWaters(listSharpClockWaterSpeed);
+                        return true;
+                    }
+                    this.AddWaters(listWaterSpeed);
+                    return true;
                 }
-                return true;
             }
+            catch (Exception eee)
+            {
+                MessageBox.Show("数据库忙，查询失败，请稍后再试！");
+                return false;
+            }
+            
         }
 
         public void InitDataSource(IWaterProxy proxy)
         {
             m_proxyWaterFlow = proxy;
+            m_proxyWaterSpeed = new CSQLWaterSpeed();
         }
 
         //流量

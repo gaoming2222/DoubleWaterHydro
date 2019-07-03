@@ -21,5 +21,22 @@ namespace Hydrology.Entity
         /// 电压
         /// </summary>
         public Nullable<Decimal> Voltge { get; set; }
+
+        /**
+         * 流速相关数据
+         * */
+        public Nullable<Decimal> Vm { get; set; }
+        public Nullable<Decimal> W1 { get; set; }
+        public Nullable<Decimal> Q { get; set; }
+        public Nullable<Decimal> v1 { get; set; }
+        public Nullable<Decimal> v2 { get; set; }
+        public Nullable<Decimal> v3 { get; set; }
+        public Nullable<Decimal> v4 { get; set; }
+        public Nullable<Decimal> beta1 { get; set; }
+        public Nullable<Decimal> beta2 { get; set; }
+        public Nullable<Decimal> beta3 { get; set; }
+        public Nullable<Decimal> beta4 { get; set; }
+        public Nullable<Decimal> W2 { get; set; }
+        public string errorCode { get; set; }
     }
 }

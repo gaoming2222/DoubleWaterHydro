@@ -33,6 +33,13 @@ namespace Hydrology.CControls
         public static readonly string CS_Port = "端口";
         public static readonly string CS_MsgType = "报文类型";
         public static readonly string CS_ChannelType = "通讯方式";
+
+        public static readonly string CS_V1 = "流速1";
+        public static readonly string CS_V2 = "流速2";
+        public static readonly string CS_V3 = "流速3";
+        public static readonly string CS_V4 = "流速4";
+
+
         public static readonly string CS_NullUIStr = "---";
         #endregion ///<STATIC_STRING
 
@@ -55,11 +62,11 @@ namespace Hydrology.CControls
             this.Header = new string[] 
             { 
                 CS_StationName, CS_StationId, CS_StationType, CS_TimeCollected, CS_DelayTime,
-                CS_TodayRain, CS_LastdayRain,CS_PeriodRain, CS_WaterLevel, CS_WaterFlowActual,CS_WaterFlowFindInTable,
+                CS_TodayRain, CS_LastdayRain,CS_PeriodRain, CS_WaterLevel,CS_V1,CS_V2,CS_V3,CS_V4, CS_WaterFlowActual,CS_WaterFlowFindInTable,
                 CS_Volatage,CS_Port, CS_MsgType, CS_ChannelType
             };
             // 隐藏延迟列，串口列
-            base.HideColomns = new int[] {4,12};
+            base.HideColomns = new int[] {4,5,6,7,14,16};
             // 设置一页的数量
             this.PageRowCount = CDBParams.GetInstance().UIPageRowCount;
             string path = string.Empty;
@@ -422,42 +429,55 @@ namespace Hydrology.CControls
         {
             List<string> result = new List<string>();
             TimeSpan span = entity.TimeReceived - entity.TimeDeviceGained;
-            result.Add(entity.StrStationName);
-            result.Add(entity.StrStationID.ToString());
-            result.Add(CEnumHelper.StationTypeToUIStr(entity.EIStationType));
-            result.Add(entity.TimeDeviceGained.ToString());
-            result.Add(string.Format("{0}m{1}s", span.Hours * 60 + span.Minutes, span.Seconds));
-            if (entity.DDayRainFall.HasValue)
-            {
-                result.Add(entity.DDayRainFall.Value.ToString("0.00"));/*今日雨量,计算*/
-            }
-            else
-            {
-                result.Add(CS_NullUIStr);
-            }
-            if (entity.LastDayRainFall.HasValue)
-            {
-                result.Add(entity.LastDayRainFall.Value.ToString("0.00"));/*昨日雨量,计算*/
-            }
-            else
-            {
-                result.Add(CS_NullUIStr);
-            }
-            if (entity.DPeriodRain.HasValue)
-            {
-                if (entity.DPeriodRain.Value >= 0)
-                {
-                    result.Add(entity.DPeriodRain.Value.ToString("0.00"));/*时段雨量,计算*/
-                }
-                else
-                {
-                    result.Add("0.00");
-                }
-            }
-            else
-            {
-                result.Add(CS_NullUIStr);
-            }
+            //表格头部信息
+            //this.Header = new string[]
+            //{
+            //    CS_StationName, CS_StationId, CS_StationType, CS_TimeCollected, CS_DelayTime,
+            //    CS_TodayRain, CS_LastdayRain,CS_PeriodRain, CS_WaterLevel,CS_V1,CS_V2,CS_V3,CS_V4, CS_WaterFlowActual,CS_WaterFlowFindInTable,
+            //    CS_Volatage,CS_Port, CS_MsgType, CS_ChannelType
+            //};
+
+            result.Add(entity.StrStationName);//站名
+            result.Add(entity.StrStationID.ToString());//站号
+            result.Add(CEnumHelper.StationTypeToUIStr(entity.EIStationType));//站类
+            result.Add(entity.TimeDeviceGained.ToString());//数据时间
+            result.Add(string.Format("{0}m{1}s", span.Hours * 60 + span.Minutes, span.Seconds));//延迟时间
+            //if (entity.DDayRainFall.HasValue)
+            //{
+            //    result.Add(entity.DDayRainFall.Value.ToString("0.00"));/*今日雨量,计算*/
+            //}
+            //else
+            //{
+            //    result.Add(CS_NullUIStr);
+            //}
+            result.Add(CS_NullUIStr);//今日雨量
+            //if (entity.LastDayRainFall.HasValue)
+            //{
+            //    result.Add(entity.LastDayRainFall.Value.ToString("0.00"));/*昨日雨量,计算*/
+            //}
+            //else
+            //{
+            //    result.Add(CS_NullUIStr);
+            //}
+            result.Add(CS_NullUIStr);//昨日雨量
+            //if (entity.DPeriodRain.HasValue)
+            //{
+            //    if (entity.DPeriodRain.Value >= 0)
+            //    {
+            //        result.Add(entity.DPeriodRain.Value.ToString("0.00"));/*时段雨量,计算*/
+            //    }
+            //    else
+            //    {
+            //        result.Add("0.00");
+            //    }
+            //}
+            //else
+            //{
+            //    result.Add(CS_NullUIStr);
+            //}
+            result.Add(CS_NullUIStr);//时段雨量
+
+            //水位
             if (entity.DWaterYield.HasValue)
             {
                 if (entity.DDayRainFall != (decimal)-20000)
@@ -473,6 +493,49 @@ namespace Hydrology.CControls
             {
                 result.Add(CS_NullUIStr);
             }
+
+            
+
+            //流速1
+            if (entity.DV1.HasValue)
+            {
+                result.Add(entity.DV1.Value.ToString("0.000"));
+            }else
+            {
+                result.Add(CS_NullUIStr);
+            }
+
+            //流速2
+            if (entity.DV1.HasValue)
+            {
+                result.Add(entity.DV2.Value.ToString("0.000"));
+            }
+            else
+            {
+                result.Add(CS_NullUIStr);
+            }
+
+            //流速3
+            if (entity.DV1.HasValue)
+            {
+                result.Add(entity.DV3.Value.ToString("0.000"));
+            }
+            else
+            {
+                result.Add(CS_NullUIStr);
+            }
+
+            //流速4
+            if (entity.DV1.HasValue)
+            {
+                result.Add(entity.DV4.Value.ToString("0.000"));
+            }
+            else
+            {
+                result.Add(CS_NullUIStr);
+            }
+
+            //实测流量
             if (entity.DWaterFlowActual.HasValue)
             {
                 result.Add(entity.DWaterFlowActual.Value.ToString("0.00"));/*实测流量*/
@@ -481,15 +544,17 @@ namespace Hydrology.CControls
             {
                 result.Add(CS_NullUIStr);
             }
-            if (entity.DWaterFlowFindInTable.HasValue)
-            {
-                result.Add(entity.DWaterFlowFindInTable.Value.ToString("0.00"));/*相应流量*/
-            }
-            else
-            {
-                result.Add(CS_NullUIStr);/*相应流量*/
-            }
-            
+
+
+            //if (entity.DWaterFlowFindInTable.HasValue)
+            //{
+            //    result.Add(entity.DWaterFlowFindInTable.Value.ToString("0.00"));/*相应流量*/
+            //}
+            //else
+            //{
+            //    result.Add(CS_NullUIStr);/*相应流量*/
+            //}
+            result.Add(CS_NullUIStr); //相应流量
 
             result.Add(entity.Dvoltage.ToString());/*电压*/
             result.Add(entity.StrPort);

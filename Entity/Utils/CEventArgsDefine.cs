@@ -179,6 +179,22 @@ namespace Hydrology.Entity
         /// 采集时间
         /// </summary>
         public DateTime DataTime;
+
+        //流速相关*******************************************
+        public Nullable<Decimal> Vm { get; set; }
+        public Nullable<Decimal> W1 { get; set; }
+        public Nullable<Decimal> Q { get; set; }
+        public Nullable<Decimal> v1 { get; set; }
+        public Nullable<Decimal> v2 { get; set; }
+        public Nullable<Decimal> v3 { get; set; }
+        public Nullable<Decimal> v4 { get; set; }
+        public Nullable<Decimal> beta1 { get; set; }
+        public Nullable<Decimal> beta2 { get; set; }
+        public Nullable<Decimal> beta3 { get; set; }
+        public Nullable<Decimal> beta4 { get; set; }
+        public Nullable<Decimal> W2 { get; set; }
+        public string errorCode { get; set; }
+        //****************************************************
     }
 
     /// <summary>
