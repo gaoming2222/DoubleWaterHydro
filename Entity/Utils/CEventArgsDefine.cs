@@ -188,6 +188,10 @@ namespace Hydrology.Entity
         public Nullable<Decimal> v2 { get; set; }
         public Nullable<Decimal> v3 { get; set; }
         public Nullable<Decimal> v4 { get; set; }
+        public Nullable<Decimal> v5 { get; set; }
+        public Nullable<Decimal> v6 { get; set; }
+        public Nullable<Decimal> v7 { get; set; }
+        public Nullable<Decimal> v8 { get; set; }
         public Nullable<Decimal> beta1 { get; set; }
         public Nullable<Decimal> beta2 { get; set; }
         public Nullable<Decimal> beta3 { get; set; }

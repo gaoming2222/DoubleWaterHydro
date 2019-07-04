@@ -2652,7 +2652,45 @@ namespace Hydrology.DataMgr
                 }
                 CDBDataMgr.Instance.EHRecvSpeedDatas(null, stationDatas);
             }
-                    
+
+
+            else if (str.Contains("@@  RG30"))
+            {
+                var stationDatas = new CEventRecvStationDatasArgs()
+                {
+                    StrStationID = report.Stationid,
+                    EStationType = report.StationType,
+                    EMessageType = report.ReportType,
+                    RecvDataTime = report.RecvTime,
+                    EChannelType = report.ChannelType,
+                    StrSerialPort = report.ListenPort
+                };
+                if (report.Datas.Count == 0)
+                {
+                    string rawStr = e.RawData;
+                    //report.Datas.Add(WrongParser(rawStr));
+                }
+                //将流速数据取出
+                foreach (var item in report.Datas)
+                {
+                    stationDatas.Datas.Add(new CSingleStationData()
+                    {
+                        TotalRain = item.Rain,
+                        WaterStage = item.Water,
+                        v1 = item.v1,
+                        v2 = item.v2,
+                        v3 = item.v3,
+                        v4 = item.v4,
+                        v5 = item.v5,
+                        v6 = item.v6,
+                        v7 = item.v7,
+                        v8 = item.v8,
+                        Voltage = item.Voltge
+                    });
+                }
+                CDBDataMgr.Instance.EHRecvRG30Datas(null, stationDatas);
+            }
+
             //*************************************************************************************
 
             else
