@@ -228,6 +228,26 @@ namespace Hydrology.Entity
             {EMessageType.Manual,        "11" }
         };
 
+        public static CDictionary<EStationType, String> StationTypeMap = new CDictionary<EStationType, string>()
+        {
+            
+            { EStationType.ERainFall,   "01" },
+            { EStationType.ERiverWater, "12" },
+            { EStationType.EHydrology, "13" },
+            { EStationType.EP,  "80" },
+            { EStationType.EH,  "72" },
+            { EStationType.EK,  "75" },
+            { EStationType.EZ,  "90" },
+            { EStationType.ED,  "68" },
+            { EStationType.ET,  "84" },
+            { EStationType.EM,  "77" },
+            { EStationType.EG,  "71" },
+            { EStationType.EQ,  "81" },
+            { EStationType.EI,  "73" },
+            { EStationType.EO,  "79" }
+        };
+
+
         public static CDictionary<EStationType, String> StationType4UIMap = new CDictionary<EStationType, string>()
         {
             //{ EStationType.ERiverWater, "01" },
