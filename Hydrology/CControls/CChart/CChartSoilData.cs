@@ -37,10 +37,10 @@ namespace Hydrology.CControls
         public static readonly string CS_Chart_Name = "流速过程线";
 
         // 线条名字
-        public static readonly string CS_Serial_Name_M10 = "10CM含水率";
-        public static readonly string CS_Serial_Name_M20 = "20CM含水率";
-        public static readonly string CS_Serial_Name_M30 = "30CM含水率";
-        public static readonly string CS_Serial_Name_M40 = "40CM含水率";
+        public static readonly string CS_Serial_Name_M10 = "流速1";
+        public static readonly string CS_Serial_Name_M20 = "流速2";
+        public static readonly string CS_Serial_Name_M30 = "流速3";
+        public static readonly string CS_Serial_Name_M40 = "流速4";
         public static readonly string CS_Serial_Name_M60 = "60CM含水率";
         public static readonly string CS_Serial_Name_Votage = "电压";
 

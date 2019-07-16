@@ -3401,6 +3401,7 @@ namespace Hydrology.DataMgr
                 realtime.DV2 = args.Datas[tmpDataCount - 1].v2;
                 realtime.DV3 = args.Datas[tmpDataCount - 1].v3;
                 realtime.DV4 = args.Datas[tmpDataCount - 1].v4;
+                realtime.DWaterFlowFindInTable = args.Datas[tmpDataCount - 1].Q;
                 realtime.DWaterFlowActual = waterFlow;
                 realtime.Dvoltage = args.Datas[tmpDataCount - 1].Voltage;
                 realtime.EIMessageType = args.EMessageType;
