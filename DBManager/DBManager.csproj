@@ -52,6 +52,9 @@
     <Compile Include="DB\SQLServer\CDBSQLTSWater.cs" />
     <Compile Include="DB\SQLServer\CSQLBase.cs" />
     <Compile Include="DB\SQLServer\CSQLCurrentData.cs" />
+    <Compile Include="DB\SQLServer\CSQLDEva.cs" />
+    <Compile Include="DB\SQLServer\CSQLEva.cs" />
+    <Compile Include="DB\SQLServer\CSQLHEva.cs" />
     <Compile Include="DB\SQLServer\CSQLPartitionMgr.cs" />
     <Compile Include="DB\SQLServer\CSQLRain.cs" />
     <Compile Include="DB\SQLServer\CSQLSerialPort.cs" />
@@ -67,6 +70,9 @@
     <Compile Include="DB\SQLServer\CSQLWaterSpeed.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interface\ICurrentDataProxy.cs" />
+    <Compile Include="Interface\IDEvaProxy.cs" />
+    <Compile Include="Interface\IEvaProxy.cs" />
+    <Compile Include="Interface\IHEvaProxy.cs" />
     <Compile Include="Interface\IMultiThread.cs" />
     <Compile Include="Interface\IRainProxy.cs" />
     <Compile Include="Interface\ISerialPortProxy.cs" />

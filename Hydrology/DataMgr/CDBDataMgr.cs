@@ -89,6 +89,9 @@ namespace Hydrology.DataMgr
         private IWarningInfoProxy m_proxyWarningInfo;
         private IWaterFlowMapProxy m_proxyWaterFlowMap;
         // private ICommunicationRateProxy m_proxyCommunicationRate;
+        private IEvaProxy m_proxyEva;
+        private IHEvaProxy m_proxyHEva;
+        private IDEvaProxy m_proxyDEva;
 
         //1009gm
         private ISoilDataProxy m_proxySoilData;
@@ -152,6 +155,10 @@ namespace Hydrology.DataMgr
             m_proxyUser = new CSQLUser();
             m_proxyWarningInfo = new CSQLWarningInfo();
             m_proxyWaterFlowMap = new CSQLWaterFlowMap();
+
+            m_proxyEva = new CSQLEva();
+            m_proxyHEva = new CSQLHEva();
+            m_proxyDEva = new CSQLDEva();
             // m_proxyCommunicationRate = new CSQLCommunicationRate();
 
             //1009gm
@@ -296,6 +303,18 @@ namespace Hydrology.DataMgr
         public IWaterFlowMapProxy GetWaterFlowMapProxy()
         {
             return m_proxyWaterFlowMap;
+        }
+        public IEvaProxy GetEvaProxy()
+        {
+            return m_proxyEva;
+        }
+        public IHEvaProxy GetHEvaProxy()
+        {
+            return m_proxyHEva;
+        }
+        public IDEvaProxy GetDEvaProxy()
+        {
+            return m_proxyDEva;
         }
         //public ICommunicationRateProxy GetCommunicationRateProxy()
         //{
@@ -791,6 +810,12 @@ namespace Hydrology.DataMgr
             //DealRTDDatas(args);
             //m_mutexTaskList.ReleaseMutex();
         }
+
+        public void EHRecvEvaDatas(object sender, CEventRecvStationDatasArgs args)
+        {
+            //NewTask(() => { DealEvaDatas(args); });
+        }
+
 
         //gm 0331
         public void EHRecvStationTSDatas(object sender, CEventRecvStationDatasArgs args)
@@ -3109,6 +3134,216 @@ namespace Hydrology.DataMgr
 
         }
 
+        /// <summary>
+        /// 处理蒸发数据
+        /// </summary>
+        /// <param name="args"></param>
+        //private void DealEvaDatas(CEventRecvStationDatasArgs args)
+        //{
+        //    try
+        //    {
+        //        Dictionary<string, string> cDic = new Dictionary<string, string>();
+        //        int tmpDataCount = args.Datas.Count;
+        //        if (tmpDataCount <= 0)
+        //        {
+        //            // 数据为空
+        //            CSystemInfoMgr.Instance.AddInfo("收到空的数据记录项目");
+        //            return;
+        //        }
+        //        // 生成实时数据CEntityRTD
+        //        CEntityStation station = GetStationById(args.StrStationID);
+        //        //station
+        //        if (null == station)
+        //        {
+        //            Debug.WriteLine("站点配置不正确，数据库没有站点{0}的配置", args.StrStationID);
+        //            return;
+        //        }
+
+        //        #region 蒸发表
+        //        List<CEntityEva> HEvas = new List<CEntityEva>();
+        //        List<CEntityEva> DEvas = new List<CEntityEva>();
+
+        //        foreach (CSingleStationData data in args.Datas)
+        //        {
+        //            // 是否和上一条时间一致, 就丢失当条数据
+        //            if (m_mapStationRTD[station.StationID].TimeDeviceGained == data.DataTime)
+        //            {
+        //                Debug.WriteLine("drop");
+        //                continue;
+        //            }
+
+        //            if (data.Eva == null || data.Temp == null)
+        //            {
+        //                continue;
+        //            }
+
+        //            CEntityEva Eva = new CEntityEva();
+        //            Eva.StationID = args.StrStationID;
+        //            Eva.Eva = data.Eva;
+        //            Eva.TE = data.Eva;
+        //            Eva.TimeCollect = data.DataTime;
+        //            Eva.Temperature = data.Temp;
+        //            Eva.Rain = data.TotalRain;
+        //            Eva.TP = data.TotalRain;
+        //            Eva.Voltage = data.Voltage;
+        //            Eva.type = data.EvpType;
+
+
+        //            CEntityEva DEva = new CEntityEva();
+        //            DEva.StationID = args.StrStationID;
+        //            DEva.Eva = data.Eva;
+        //            DEva.TE = data.Eva;
+        //            DEva.TimeCollect = data.DataTime;
+        //            DEva.Temperature = data.Temp;
+        //            DEva.Rain = data.TotalRain;
+        //            DEva.TP = data.TotalRain;
+        //            DEva.Voltage = data.Voltage;
+        //            DEva.type = data.EvpType;
+
+        //            cDic = cal.EvaCal(Eva);
+        //            if (cDic.Count == 0)
+        //            {
+        //                continue;
+        //            }
+        //            if (cDic.ContainsKey("hourE"))
+        //            {
+
+        //                if (cDic["hourE"] != "")
+        //                {
+        //                    Eva.Eva = decimal.Parse(cDic["hourE"]);
+        //                    Eva.Rain = decimal.Parse(cDic["hourP"]);
+        //                    Eva.Temperature = decimal.Parse(cDic["hourT"]);
+        //                    Eva.Voltage = decimal.Parse(cDic["hourU"]);
+        //                    Eva.DH = decimal.Parse(cDic["dH"]);
+        //                    DayEva = DayEva + decimal.Parse(cDic["hourE"]);
+        //                    DayRain = DayRain + decimal.Parse(cDic["hourP"]);
+        //                    HEvas.Add(Eva);
+        //                }
+        //            }
+        //            if (cDic.ContainsKey("dayE"))
+        //            {
+        //                if (cDic["dayE"] != "")
+        //                {
+        //                    DEva.Eva = decimal.Parse(cDic["dayE"]);
+        //                    DEva.Rain = decimal.Parse(cDic["dayP"]);
+        //                    DEva.Temperature = decimal.Parse(cDic["dayT"]);
+        //                    DEva.P8 = decimal.Parse(cDic["P8"]);
+        //                    DEva.P20 = decimal.Parse(cDic["P20"]);
+        //                    DayEva = 0;
+        //                    DayRain = 0;
+        //                    lastDayEva = decimal.Parse(cDic["dayE"]);
+        //                    lastDayRain = decimal.Parse(cDic["dayP"]);
+
+        //                    DEvas.Add(DEva);
+        //                }
+        //            }
+        //            if (cDic.ContainsKey("needCover"))
+        //            {
+        //                if (cDic["needCover"] == "1")
+        //                {
+        //                    DateTime startTime = data.DataTime.AddDays(-1).AddHours(1);
+        //                    DateTime endTime = data.DataTime.AddHours(-1);
+        //                    decimal comP = decimal.Parse(cDic["hourComP"]);
+        //                    m_proxyHEva.UpdateRows(startTime, endTime, comP);
+        //                }
+        //            }
+        //        }
+        //        if (HEvas.Count > 0)
+        //        {
+        //            m_proxyHEva.AddNewRows(HEvas);
+        //        }
+        //        if (DEvas.Count > 0)
+        //        {
+        //            m_proxyDEva.AddNewRows(DEvas);
+        //        }
+        //        #endregion
+
+        //        #region 实时蒸发表
+        //        CEntityRealEva realtime = new CEntityRealEva();
+        //        if (!cDic.ContainsKey("hourE"))
+        //        {
+        //            realtime.StrStationID = station.StationID;
+        //            realtime.StationType = station.StationType;
+        //            realtime.StrStationName = station.StationName;
+
+        //            //所有数据为空
+        //            realtime.LastDayRain = null;
+        //            realtime.LastDayEva = null;
+        //            realtime.DayRain = null;
+        //            realtime.DayEva = null;
+        //            realtime.Eva = null;
+        //            realtime.Rain = null;
+        //            realtime.Temperature = null;
+        //            realtime.Voltage = null;
+        //            realtime.DH = null;
+
+        //            realtime.TimeReceived = args.RecvDataTime;
+        //            realtime.TimeDeviceGained = args.Datas[tmpDataCount - 1].DataTime; //采集时间
+        //            realtime.RawEva = args.Datas[tmpDataCount - 1].Eva;
+        //            realtime.RawRain = args.Datas[tmpDataCount - 1].TotalRain;
+        //            realtime.RawVoltage = args.Datas[tmpDataCount - 1].Voltage;
+
+        //            realtime.LastDayRain = lastDayRain;
+        //            realtime.LastDayEva = lastDayEva;
+        //            realtime.DayRain = DayRain;
+        //            realtime.DayEva = DayEva;
+        //            if (args.Datas[tmpDataCount - 1].EvpType != null && (args.Datas[tmpDataCount - 1].EvpType.ToString().Length >= 2))
+        //            {
+        //                realtime.act = args.Datas[tmpDataCount - 1].EvpType;
+        //            }
+        //            //realtime.act = args.Datas[tmpDataCount - 1].EvpType;
+
+        //            // 发消息，通知界面更新
+        //            if (RecvedRTD_Eva != null)
+        //            {
+        //                Task.Factory.StartNew(() => { RecvedRTD_Eva.Invoke(this, new CEventSingleArgs<CEntityRealEva>(realtime)); });
+        //            }
+
+        //            m_mapStationRTS[station.StationID] = realtime;
+
+        //            m_proxyRealEva.AddNewRow(realtime);
+        //        }
+        //        else
+        //        {
+        //            realtime.StrStationID = station.StationID;
+        //            realtime.StationType = station.StationType;
+        //            realtime.StrStationName = station.StationName;
+        //            //TODO
+        //            realtime.LastDayRain = lastDayRain;
+        //            realtime.LastDayEva = lastDayEva;
+        //            realtime.DayRain = DayRain;
+        //            realtime.DayEva = DayEva;
+        //            //realtime.EIChannelType = args.EChannelType;
+        //            realtime.Eva = Decimal.Parse(cDic["hourE"]);
+        //            realtime.Rain = Decimal.Parse(cDic["hourP"]);
+        //            realtime.Temperature = Decimal.Parse(cDic["hourT"]);
+        //            realtime.Voltage = Decimal.Parse(cDic["hourU"]);
+        //            realtime.DH = decimal.Parse(cDic["dH"]);
+        //            realtime.TimeReceived = args.RecvDataTime;
+        //            realtime.TimeDeviceGained = args.Datas[tmpDataCount - 1].DataTime; //采集时间
+        //            realtime.RawEva = args.Datas[tmpDataCount - 1].Eva;
+        //            realtime.RawRain = args.Datas[tmpDataCount - 1].TotalRain;
+        //            realtime.RawVoltage = args.Datas[tmpDataCount - 1].Voltage;
+        //            realtime.act = args.Datas[tmpDataCount - 1].EvpType;
+
+        //            // 发消息，通知界面更新
+        //            if (RecvedRTD_Eva != null)
+        //            {
+        //                Task.Factory.StartNew(() => { RecvedRTD_Eva.Invoke(this, new CEventSingleArgs<CEntityRealEva>(realtime)); });
+        //            }
+
+        //            m_mapStationRTS[station.StationID] = realtime;
+
+        //            m_proxyRealEva.AddNewRow(realtime);
+
+        //        }
+        //        #endregion
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.ToString());
+        //    }
+        //}
         //处理流速数据DealSpeedDatas
         private void DealSpeedDatas(CEventRecvStationDatasArgs args)
         {

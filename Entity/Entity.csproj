@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CEntityCommunicationRate.cs" />
+    <Compile Include="CEntityEva.cs" />
     <Compile Include="CEntityPackage.cs" />
     <Compile Include="CEntityRain.cs" />
     <Compile Include="CEntityRainAndWater.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Protocol\Data\ModemDataEventArgs.cs" />
     <Compile Include="Protocol\Data\ProtocolStrMaps.cs" />
     <Compile Include="Utils\CStringFromatHelper.cs" />
+    <Compile Include="Utils\EvaConf.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2691,6 +2691,38 @@ namespace Hydrology.DataMgr
                 CDBDataMgr.Instance.EHRecvRG30Datas(null, stationDatas);
             }
 
+            else if (report.ReportType == EMessageType.Evp)
+            {
+                var stationDatas = new CEventRecvStationDatasArgs()
+                {
+                    StrStationID = report.Stationid,
+                    EStationType = report.StationType,
+                    EMessageType = report.ReportType,
+                    RecvDataTime = report.RecvTime,
+                    EChannelType = report.ChannelType,
+                    StrSerialPort = report.ListenPort
+                };
+                if (report.Datas.Count == 0)
+                {
+                    string rawStr = e.RawData;
+                    report.Datas.Add(WrongParser(rawStr));
+                }
+
+                foreach (var item in report.Datas)
+                {
+                    stationDatas.Datas.Add(new CSingleStationData()
+                    {
+                        TotalRain = item.Rain,
+                        Voltage = item.Voltge.Value,
+                        Temp = item.Temperature.Value,
+                        Eva = item.Evp,
+                        DataTime = item.Time,
+                        EvpType = item.EvpType
+                    });
+                }
+                //  写入内存，写库
+                CDBDataMgr.Instance.EHRecvEvaDatas(null, stationDatas);
+            }
             //*************************************************************************************
 
             else

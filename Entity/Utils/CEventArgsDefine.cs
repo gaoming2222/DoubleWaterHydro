@@ -198,7 +198,22 @@ namespace Hydrology.Entity
         public Nullable<Decimal> beta4 { get; set; }
         public Nullable<Decimal> W2 { get; set; }
         public string errorCode { get; set; }
+
+        /// <summary>
+        /// 蒸发
+        /// </summary>
+        public Nullable<Decimal> Eva;
+
+        /// <summary>
+        /// 温度
+        /// </summary>
+        public Nullable<Decimal> Temp;
         //****************************************************
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public string EvpType;
     }
 
     /// <summary>

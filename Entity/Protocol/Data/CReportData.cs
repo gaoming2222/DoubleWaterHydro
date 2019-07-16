@@ -42,5 +42,19 @@ namespace Hydrology.Entity
         public Nullable<Decimal> beta4 { get; set; }
         public Nullable<Decimal> W2 { get; set; }
         public string errorCode { get; set; }
+
+        /// <summary>
+        /// 蒸发
+        /// </summary>
+        public Nullable<Decimal> Evp { get; set; }
+        /// <summary>
+        /// 蒸发类型
+        /// </summary>
+        public string EvpType { get; set; }
+        /// <summary>
+        /// 温度
+        /// </summary>
+        public Nullable<Decimal> Temperature { get; set; }
+
     }
 }

@@ -158,4 +158,32 @@ namespace Hydrology.Entity
         /// </summary>
         public Nullable<ESensorType> SensorType;
     }
+
+    public class CDownConfEV
+    {
+        /// <summary>
+        /// 03 日期
+        /// </summary>
+        public string Date;
+
+        /// <summary>
+        /// 04 时间
+        /// </summary>
+        public string Time;
+
+        /// <summary>
+        /// 05 目的手机卡号命令
+        /// </summary>
+        public string TelephoneNumD;
+
+        /// <summary>
+        /// 06 ID号
+        /// </summary>
+        public string ID;
+
+        /// <summary>
+        /// 06 液位限制命令
+        /// </summary>
+        public string HeightLimit;
+    }  
 }

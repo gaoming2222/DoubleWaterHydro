@@ -69,8 +69,8 @@ namespace Hydrology.Entity
         ETimed,     /*定时报*/
         EAdditional,   /*加报*/
         Manual,
-        EMannual
-
+        EMannual,
+        Evp
 
     };
 

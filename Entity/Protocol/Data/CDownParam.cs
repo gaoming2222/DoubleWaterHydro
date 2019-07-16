@@ -202,4 +202,27 @@ namespace Hydrology.Entity
         storeWater,
         realWater
     }
+
+    /// <summary>
+    /// 蒸发下行参数
+    /// </summary>
+    public enum EDownParamEV
+    {
+        /// <summary>
+        /// 03 时钟命令
+        /// </summary>
+        Clock,
+        /// <summary>
+        /// 04 目的手机卡号命令
+        /// </summary>
+        TelephoneNum,
+        /// <summary>
+        /// 05 ID号命令
+        /// </summary>
+        ID,
+        /// <summary>
+        /// 06 液位限制命令
+        /// </summary>
+        HeightLimit
+    }
 }
