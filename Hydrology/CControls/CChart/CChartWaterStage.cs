@@ -384,8 +384,8 @@ namespace Hydrology.CControls
             m_title.Text = CS_Chart_Name;
 
             // 设置水位和流量格式
-            m_chartAreaDefault.AxisY.LabelStyle.Format = "0.00";
-            m_chartAreaDefault.AxisY2.LabelStyle.Format = "0.00";
+            m_chartAreaDefault.AxisY.LabelStyle.Format = "0.000";
+            m_chartAreaDefault.AxisY2.LabelStyle.Format = "0.000";
 
             // m_chartAreaDefault.AxisX.Title = CS_Asix_DateTime; //不显示名字
             m_chartAreaDefault.AxisY.Title = CS_AsixY_Name;

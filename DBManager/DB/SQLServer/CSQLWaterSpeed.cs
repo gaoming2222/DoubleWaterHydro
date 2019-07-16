@@ -37,6 +37,7 @@ namespace DBManager.DB.SQLServer
         public static readonly string CN_V3 = "AvgV3";  //水位
         public static readonly string CN_V4 = "AvgV4";  //水位
         public static readonly string CN_WaterFlow = "Q";     //流量
+        public static readonly string CN_WaterFlowMc = "rawQ";     //流量
         public static readonly string CN_TransType = "transtype";  //通讯方式
         public static readonly string CN_MsgType = "messagetype";  //报送类型
         public static readonly string CN_RecvDataTime = "recvdatatime";    //接收到数据的时间
@@ -99,6 +100,7 @@ namespace DBManager.DB.SQLServer
                     waterSpeed.AvgV2 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V2].ToString());
                     waterSpeed.AvgV3 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V3].ToString());
                     waterSpeed.AvgV4 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V4].ToString());
+                    waterSpeed.rawQ = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlowMc].ToString());
                     waterSpeed.Q = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlow].ToString());
                     waterSpeed.RevtDT = DateTime.Parse(dataTableTemp.Rows[rowid][CN_RecvDataTime].ToString());
                     waterSpeed.ChannelType = CEnumHelper.DBStrToChannelType(dataTableTemp.Rows[rowid][CN_TransType].ToString());

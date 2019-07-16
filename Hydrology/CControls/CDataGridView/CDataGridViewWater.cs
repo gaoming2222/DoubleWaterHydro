@@ -23,15 +23,16 @@ namespace Hydrology.CControls
         public static readonly string CS_StationID = "站号";
         public static readonly string CS_StationName = "站名";
         public static readonly string CS_TimeCollected = "采集时间";
-        public static readonly string CS_WaterStage = "水位";
+        public static readonly string CS_WaterStage = "水位（m）";
 
-        public static readonly string CS_V1 = "流速1";
-        public static readonly string CS_V2 = "流速2";
-        public static readonly string CS_V3 = "流速3";
-        public static readonly string CS_V4 = "流速4";
+        public static readonly string CS_V1 = "流速1(m/s)";
+        public static readonly string CS_V2 = "流速2(m/s)";
+        public static readonly string CS_V3 = "流速3(m/s)";
+        public static readonly string CS_V4 = "流速4(m/s)";
 
 
-        public static readonly string CS_WaterFlow = "相应流量";
+        public static readonly string CS_WaterFlow = "计算流量(m³/s)";
+        public static readonly string CS_WaterFlowMc = "设备流量(m³/s)";
 
         public static readonly string CS_TimeReceived = "接收时间";
         public static readonly string CS_MsgType = "报文类型";
@@ -77,7 +78,7 @@ namespace Hydrology.CControls
             // 设定标题栏,默认有个隐藏列,默认非编辑模式
             this.Header = new string[] 
             { 
-                CS_StationID,CS_StationName,CS_TimeCollected, CS_WaterStage,CS_V1,CS_V2,CS_V3,CS_V4, CS_WaterFlow ,CS_DataState ,CS_TimeReceived, CS_ChannelType, CS_MsgType 
+                CS_StationID,CS_StationName,CS_TimeCollected, CS_WaterStage,CS_V1,CS_V2,CS_V3,CS_V4, CS_WaterFlow,CS_WaterFlowMc ,CS_DataState ,CS_TimeReceived, CS_ChannelType, CS_MsgType 
             };
 
             // 设置一页的数量
@@ -139,6 +140,7 @@ namespace Hydrology.CControls
                         listWaterSpeed[i].AvgV3.ToString(), /*水位*/
                         listWaterSpeed[i].AvgV4.ToString(), /*水位*/
                         listWaterSpeed[i].Q.ToString(), /*流量*/
+                        listWaterSpeed[i].rawQ.ToString(), /*流量*/
                         state_1,
                         listWaterSpeed[i].RevtDT.ToString(CS_TimeFormat), /*接收时间*/
                         CEnumHelper.ChannelTypeToUIStr(listWaterSpeed[i].ChannelType), /*通讯方式*/
@@ -281,7 +283,7 @@ namespace Hydrology.CControls
                 // 设定标题栏,默认有个隐藏列
                 this.Header = new string[] 
                 { 
-                    CS_Delete,CS_StationID,CS_StationName,CS_TimeCollected, CS_WaterStage, CS_WaterFlow,CS_DataState, CS_TimeReceived, CS_ChannelType, CS_MsgType
+                    CS_Delete,CS_StationID,CS_StationName,CS_TimeCollected, CS_WaterStage, CS_WaterFlow,CS_WaterFlowMc,CS_DataState, CS_TimeReceived, CS_ChannelType, CS_MsgType
                 };
 
                // this.HideColomns = new int[] { 8 };

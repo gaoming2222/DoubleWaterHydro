@@ -23,21 +23,21 @@ namespace Hydrology.CControls
         public static readonly string CS_StationType = "站点类型";
         public static readonly string CS_TimeCollected = "采集时间";
         public static readonly string CS_DelayTime = "延迟";
-        public static readonly string CS_TodayRain = "今日雨量";
-        public static readonly string CS_LastdayRain = "昨日雨量";
-        public static readonly string CS_PeriodRain = "时段雨量";
-        public static readonly string CS_WaterLevel = "水位";
-        public static readonly string CS_WaterFlowActual = "实测流量";
-        public static readonly string CS_WaterFlowFindInTable = "相应流量";
-        public static readonly string CS_Volatage = "电压";
+        public static readonly string CS_TodayRain = "今日雨量(mm)";
+        public static readonly string CS_LastdayRain = "昨日雨量(mm)";
+        public static readonly string CS_PeriodRain = "时段雨量(mm)";
+        public static readonly string CS_WaterLevel = "水位(m)";
+        public static readonly string CS_WaterFlowActual = "计算流量(m³/s)";
+        public static readonly string CS_WaterFlowFindInTable = "设备流量(m³/s)";
+        public static readonly string CS_Volatage = "电压(V)";
         public static readonly string CS_Port = "端口";
         public static readonly string CS_MsgType = "报文类型";
         public static readonly string CS_ChannelType = "通讯方式";
 
-        public static readonly string CS_V1 = "流速1";
-        public static readonly string CS_V2 = "流速2";
-        public static readonly string CS_V3 = "流速3";
-        public static readonly string CS_V4 = "流速4";
+        public static readonly string CS_V1 = "流速1(m/s)";
+        public static readonly string CS_V2 = "流速2(m/s)";
+        public static readonly string CS_V3 = "流速3(m/s)";
+        public static readonly string CS_V4 = "流速4(m/s)";
 
 
         public static readonly string CS_NullUIStr = "---";
@@ -66,7 +66,7 @@ namespace Hydrology.CControls
                 CS_Volatage,CS_Port, CS_MsgType, CS_ChannelType
             };
             // 隐藏延迟列，串口列
-            base.HideColomns = new int[] {4,5,6,7,14,16};
+            base.HideColomns = new int[] {4,5,6,7,16};
             // 设置一页的数量
             this.PageRowCount = CDBParams.GetInstance().UIPageRowCount;
             string path = string.Empty;
@@ -546,15 +546,15 @@ namespace Hydrology.CControls
             }
 
 
-            //if (entity.DWaterFlowFindInTable.HasValue)
-            //{
-            //    result.Add(entity.DWaterFlowFindInTable.Value.ToString("0.00"));/*相应流量*/
-            //}
-            //else
-            //{
-            //    result.Add(CS_NullUIStr);/*相应流量*/
-            //}
-            result.Add(CS_NullUIStr); //相应流量
+            if (entity.DWaterFlowFindInTable.HasValue)
+            {
+                result.Add(entity.DWaterFlowFindInTable.Value.ToString("0.00"));/*相应流量*/
+            }
+            else
+            {
+                result.Add(CS_NullUIStr);/*相应流量*/
+            }
+            //result.Add(CS_NullUIStr); //相应流量
 
             result.Add(entity.Dvoltage.ToString());/*电压*/
             result.Add(entity.StrPort);
