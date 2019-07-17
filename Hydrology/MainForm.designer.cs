@@ -115,6 +115,7 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.MI_STATIONMAP = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.m_statusStrip.SuspendLayout();
@@ -156,6 +157,7 @@
             this.MI_CommunicationPort,
             this.MI_DatabaseConfig,
             this.MI_VoiceConfig,
+            this.MI_STATIONMAP,
             this.toolStripSeparator4,
             this.MI_SystemExit});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
@@ -166,21 +168,21 @@
             // MI_ChannelProtocolCfg
             // 
             this.MI_ChannelProtocolCfg.Name = "MI_ChannelProtocolCfg";
-            this.MI_ChannelProtocolCfg.Size = new System.Drawing.Size(161, 22);
+            this.MI_ChannelProtocolCfg.Size = new System.Drawing.Size(180, 22);
             this.MI_ChannelProtocolCfg.Tag = "通讯方式配置";
             this.MI_ChannelProtocolCfg.Text = "通讯方式配置";
             // 
             // MI_DataProtocolCfg
             // 
             this.MI_DataProtocolCfg.Name = "MI_DataProtocolCfg";
-            this.MI_DataProtocolCfg.Size = new System.Drawing.Size(161, 22);
+            this.MI_DataProtocolCfg.Size = new System.Drawing.Size(180, 22);
             this.MI_DataProtocolCfg.Tag = "数据协议配置";
             this.MI_DataProtocolCfg.Text = "数据协议配置";
             // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(158, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(177, 6);
             // 
             // MI_CommunicationPort
             // 
@@ -190,7 +192,7 @@
             this.MI_Beidou,
             this.MI_Beidou500});
             this.MI_CommunicationPort.Name = "MI_CommunicationPort";
-            this.MI_CommunicationPort.Size = new System.Drawing.Size(161, 22);
+            this.MI_CommunicationPort.Size = new System.Drawing.Size(180, 22);
             this.MI_CommunicationPort.Text = "通讯口配置";
             // 
             // MI_SerialPortConfig
@@ -224,26 +226,26 @@
             // MI_DatabaseConfig
             // 
             this.MI_DatabaseConfig.Name = "MI_DatabaseConfig";
-            this.MI_DatabaseConfig.Size = new System.Drawing.Size(161, 22);
+            this.MI_DatabaseConfig.Size = new System.Drawing.Size(180, 22);
             this.MI_DatabaseConfig.Tag = "数据库配置";
             this.MI_DatabaseConfig.Text = "数据库配置(&C)...";
             // 
             // MI_VoiceConfig
             // 
             this.MI_VoiceConfig.Name = "MI_VoiceConfig";
-            this.MI_VoiceConfig.Size = new System.Drawing.Size(161, 22);
+            this.MI_VoiceConfig.Size = new System.Drawing.Size(180, 22);
             this.MI_VoiceConfig.Tag = "声音配置";
             this.MI_VoiceConfig.Text = "声音配置...";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(158, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // MI_SystemExit
             // 
             this.MI_SystemExit.Name = "MI_SystemExit";
-            this.MI_SystemExit.Size = new System.Drawing.Size(161, 22);
+            this.MI_SystemExit.Size = new System.Drawing.Size(180, 22);
             this.MI_SystemExit.Tag = "退出";
             this.MI_SystemExit.Text = "退出(&X)";
             // 
@@ -264,7 +266,7 @@
             this.MI_LogIn.Name = "MI_LogIn";
             this.MI_LogIn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.MI_LogIn.ShowShortcutKeys = false;
-            this.MI_LogIn.Size = new System.Drawing.Size(125, 22);
+            this.MI_LogIn.Size = new System.Drawing.Size(180, 22);
             this.MI_LogIn.Tag = "用户登陆";
             this.MI_LogIn.Text = "用户登陆...";
             // 
@@ -275,14 +277,14 @@
             this.MI_UserLogout.Name = "MI_UserLogout";
             this.MI_UserLogout.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.MI_UserLogout.ShowShortcutKeys = false;
-            this.MI_UserLogout.Size = new System.Drawing.Size(125, 22);
+            this.MI_UserLogout.Size = new System.Drawing.Size(180, 22);
             this.MI_UserLogout.Tag = "用户退出";
             this.MI_UserLogout.Text = "用户退出";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(122, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
             // 
             // MI_UserMgr
             // 
@@ -290,7 +292,7 @@
             this.MI_UserMgr.Name = "MI_UserMgr";
             this.MI_UserMgr.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.MI_UserMgr.ShowShortcutKeys = false;
-            this.MI_UserMgr.Size = new System.Drawing.Size(125, 22);
+            this.MI_UserMgr.Size = new System.Drawing.Size(180, 22);
             this.MI_UserMgr.Tag = "用户管理";
             this.MI_UserMgr.Text = "用户注册";
             // 
@@ -910,6 +912,13 @@
             this.splitContainer2.SplitterDistance = 215;
             this.splitContainer2.TabIndex = 0;
             // 
+            // MI_STATIONMAP
+            // 
+            this.MI_STATIONMAP.Name = "MI_STATIONMAP";
+            this.MI_STATIONMAP.Size = new System.Drawing.Size(180, 22);
+            this.MI_STATIONMAP.Tag = "站点映射";
+            this.MI_STATIONMAP.Text = "站点映射";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1033,6 +1042,7 @@
         private System.Windows.Forms.ToolStripMenuItem I_searchDebug;
         private System.Windows.Forms.ToolStripMenuItem MI_Soil;
         private System.Windows.Forms.ToolStripMenuItem DataText;
+        private System.Windows.Forms.ToolStripMenuItem MI_STATIONMAP;
     }
 }
 

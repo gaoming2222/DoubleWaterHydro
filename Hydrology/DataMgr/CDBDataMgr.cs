@@ -74,6 +74,7 @@ namespace Hydrology.DataMgr
 
         #region 数据成员
         private IStationProxy m_proxyStation;
+        private IStationMapProxy m_proxyStationMap;
         private ISubCenterProxy m_proxySubCenter;
         private IWaterProxy m_proxyWater;
         private IWaterSpeedProxy m_proxyWaterSpeed;
@@ -99,6 +100,7 @@ namespace Hydrology.DataMgr
         private List<CEntityStation> m_listStations;    //所有站点内存副本
         private List<CEntitySubCenter> m_listSubCenter; //所有分中心内存副本
         private List<CEntitySerialPort> m_listSerialPort;   //所有串口的内存副本
+        private List<CEntityStationMap> m_listStationMap;
         public Dictionary<string, CEntityStation> m_mapStation;    //站点ID和站点映射
         private Dictionary<string, List<CEntityWaterFlowMap>> m_mapStationWaterFlow; //站点的水位流量线条
         private Dictionary<string, CEntityRealTime> m_mapStationRTD;        //站点实时数据
@@ -141,6 +143,7 @@ namespace Hydrology.DataMgr
             }
             // 此处应该考虑根据配置连接不同的数据库，嘿嘿，从长计议，工厂模式啥啥啥的都可以
             m_proxyStation = new CSQLStation();
+            m_proxyStationMap = new CSQLStationMap();
             m_proxySubCenter = new CSQLSubCenter();
             m_proxyWater = new CSQLWater();
             m_proxyWaterSpeed = new CSQLWaterSpeed();
@@ -172,7 +175,7 @@ namespace Hydrology.DataMgr
             m_listStations = m_proxyStation.QueryAll();
             m_listSubCenter = m_proxySubCenter.QueryAll();
             m_listSerialPort = m_proxySerialPort.QueryAll();
-
+            m_listStationMap = m_proxyStationMap.QueryAll();
             // 对站点排序
             m_listStations.Sort();
 
@@ -364,6 +367,15 @@ namespace Hydrology.DataMgr
                 return new List<CEntitySerialPort>();
             return m_listSerialPort;
         }
+
+        public List<CEntityStationMap> GetAllStationMap()
+        {
+            if (null == m_listStationMap)
+                return new List<CEntityStationMap>();
+            return m_listStationMap;
+        }
+
+
         public List<string> GetAllSerialPortName()
         {
             var result = new List<string>();

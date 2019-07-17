@@ -84,7 +84,7 @@ namespace Hydrology.Forms
                     (form as CProtocolConfigForm).ProtocolConfigChanged += MainForm.ProtocolConfigChanged;
                     break;
                 case "串口配置":
-                    form = new CSerialPortConfigForm();
+                    form = new CStationMapForm();
                     break;
                 case "数据库配置":
                     form = new CDatabaseConfigForm();
@@ -160,6 +160,9 @@ namespace Hydrology.Forms
                 //    form = new MoreStationsMonthForm(); //多站月报表
                 //    break;
                 case "声音配置":
+                    form = new CVoiceConfigForm();
+                    break;
+                case "站点映射":
                     form = new CVoiceConfigForm();
                     break;
                 case "文本导出":

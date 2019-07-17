@@ -50,6 +50,7 @@
     <Compile Include="CEntitySoilData.cs" />
     <Compile Include="CEntitySoilStation.cs" />
     <Compile Include="CEntityStation.cs" />
+    <Compile Include="CEntityStationMap.cs" />
     <Compile Include="CEntitySubCenter.cs" />
     <Compile Include="CEntityTSRain.cs" />
     <Compile Include="CEntityTSVoltage.cs" />

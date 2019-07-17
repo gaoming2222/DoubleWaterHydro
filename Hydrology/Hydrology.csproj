@@ -109,6 +109,9 @@
     <Compile Include="CControls\CDataGridView\CDataGridViewRealityWater.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CControls\CDataGridView\CDataGridViewStationMap.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CControls\CDataGridView\CDataGridViewSerialPort.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -359,6 +362,12 @@
     </Compile>
     <Compile Include="Forms\CStationDataMgrForm.Designer.cs">
       <DependentUpon>CStationDataMgrForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CStationMapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CStationMapForm.Designer.cs">
+      <DependentUpon>CStationMapForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CStationMgrForm.cs">
       <SubType>Form</SubType>

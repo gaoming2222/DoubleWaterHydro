@@ -16,6 +16,8 @@ namespace Hydrology.DBManager.DB.SQLServer
 
         public static Mutex Mutex_TB_SerialPort = new Mutex();
 
+        public static Mutex Mutex_TB_StationMap = new Mutex();
+
         public static Mutex Mutex_TB_Station = new Mutex();
 
         public static Mutex Mutex_TB_WarningInfo = new Mutex();

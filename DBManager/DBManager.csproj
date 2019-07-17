@@ -61,6 +61,7 @@
     <Compile Include="DB\SQLServer\CSQLSoilData.cs" />
     <Compile Include="DB\SQLServer\CSQLSoilStation.cs" />
     <Compile Include="DB\SQLServer\CSQLStation.cs" />
+    <Compile Include="DB\SQLServer\CSQLStationMap.cs" />
     <Compile Include="DB\SQLServer\CSQLSubCenter.cs" />
     <Compile Include="DB\SQLServer\CSQLUser.cs" />
     <Compile Include="DB\SQLServer\CSQLVoltage.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Interface\ISerialPortProxy.cs" />
     <Compile Include="Interface\ISoilDataProxy.cs" />
     <Compile Include="Interface\ISoilStationProxy.cs" />
+    <Compile Include="Interface\IStationMapProxy.cs" />
     <Compile Include="Interface\IStationProxy.cs" />
     <Compile Include="Interface\ISubCenterProxy.cs" />
     <Compile Include="Interface\ITSRainProxy.cs" />

@@ -61,6 +61,26 @@ namespace Entity
         /// </summary>
         public Nullable<Decimal> AvgV4 { get; set; }
 
+        /// <summary>
+        /// 平均流速5
+        /// </summary>
+        public Nullable<Decimal> AvgV5 { get; set; }
+
+        /// <summary>
+        /// 平均流速6
+        /// </summary>
+        public Nullable<Decimal> AvgV6 { get; set; }
+
+        /// <summary>
+        /// 平均流速7
+        /// </summary>
+        public Nullable<Decimal> AvgV7 { get; set; }
+
+        /// <summary>
+        /// 平均流速8
+        /// </summary>
+        public Nullable<Decimal> AvgV8 { get; set; }
+
 
         /// <summary>
         /// 偏角1
