@@ -13,5 +13,6 @@ namespace DBManager.Interface
 
 
         void batchInsertRows(List<CEntityWaterSpeed> waterSpeedList);
+        void batchInsertRows2(List<CEntityWaterSpeed> waterSpeedList);
     }
 }

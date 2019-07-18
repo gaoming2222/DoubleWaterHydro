@@ -823,6 +823,16 @@ namespace Hydrology.DataMgr
             //m_mutexTaskList.ReleaseMutex();
         }
 
+
+        public void EHRecvSM100HDatas(object sender, CEventRecvStationDatasArgs args)
+        {
+
+            //m_mutexTaskList.WaitOne();
+            NewTask(() => { DealSM100HDatas(args); });
+            //DealRTDDatas(args);
+            //m_mutexTaskList.ReleaseMutex();
+        }
+
         public void EHRecvEvaDatas(object sender, CEventRecvStationDatasArgs args)
         {
             //NewTask(() => { DealEvaDatas(args); });
@@ -3520,6 +3530,93 @@ namespace Hydrology.DataMgr
 
             }
         }
+        /// <summary>
+        /// 处理SM100H数据
+        /// </summary>
+        /// <param name="args"></param>
+        private void DealSM100HDatas(CEventRecvStationDatasArgs args)
+        {
+            
+            try
+            {
+                //1.判定是否有数据，如果没有数据则返回
+                int tmpDataCount = args.Datas.Count;
+                if (tmpDataCount <= 0)
+                {
+                    // 数据为空
+                    CSystemInfoMgr.Instance.AddInfo("收到空的数据记录项目");
+                    return;
+                }
+                //2.根据站点ID获取站点信息
+                CEntityStation station = GetStationById(args.StrStationID);
+                //station
+                if (null == station)
+                {
+                    Debug.WriteLine("站点配置不正确，数据库没有站点{0}的配置", args.StrStationID);
+                    return;
+                }
+                //3.根据流速计算
+                List<CEntityWaterSpeed> waterSpeedList = new List<CEntityWaterSpeed>();
+                foreach (CSingleStationData data in args.Datas)
+                {
+                    CEntityWaterSpeed waterSpeed = new CEntityWaterSpeed();
+                    waterSpeed.STCD = args.StrStationID;
+                    waterSpeed.DT = args.RecvDataTime;
+                    waterSpeed.AvgV1 = data.v1;
+                    waterSpeed.AvgV2 = data.v2;
+                    waterSpeed.AvgV3 = data.v3;
+                    waterSpeed.AvgV4 = data.v4;
+                    waterSpeed.W1 = data.W1;
+                    
+                    waterSpeed.rawQ = data.Q;
+                    //3.1 根据流速计算流量
+                    //waterFlow = (decimal)QCal.Qcalc((double)waterSpeed.W1, (double)waterSpeed.AvgV1, (double)waterSpeed.AvgV2, (double)waterSpeed.AvgV3, (double)waterSpeed.AvgV4);
+                    waterSpeed.Q = data.Q2;
+                    waterSpeed.RevtDT = DateTime.Now;
+                    waterSpeed.MessageType = args.EMessageType;
+                    waterSpeed.ChannelType = args.EChannelType;
+                    waterSpeedList.Add(waterSpeed);
+                }
+                //4.存储数据到数据库
+                m_proxyWaterSpeed.batchInsertRows2(waterSpeedList);
+
+                //5.更新数据到首页实时显示
+                CEntityRealTime realtime = new CEntityRealTime();
+                realtime.StrStationName = station.StationName;
+                realtime.StrStationID = station.StationID;
+                realtime.TimeDeviceGained = args.RecvDataTime;
+                realtime.EIStationType = station.StationType;
+                realtime.DWaterYield = args.Datas[tmpDataCount - 1].W1;
+                realtime.DV1 = args.Datas[tmpDataCount - 1].v1;
+                realtime.DV2 = args.Datas[tmpDataCount - 1].v2;
+                realtime.DV3 = args.Datas[tmpDataCount - 1].v3;
+                realtime.DV4 = args.Datas[tmpDataCount - 1].v4;
+                realtime.DWaterFlowFindInTable = args.Datas[tmpDataCount - 1].Q;
+                realtime.DWaterFlowActual = args.Datas[tmpDataCount - 1].Q2;
+                realtime.Dvoltage = args.Datas[tmpDataCount - 1].Voltage;
+                realtime.EIMessageType = args.EMessageType;
+                realtime.EIChannelType = args.EChannelType;
+
+                // 发消息，通知界面更新
+                if (RecvedRTD != null)
+                {
+                    Task.Factory.StartNew(() => { RecvedRTD.Invoke(this, new CEventSingleArgs<CEntityRealTime>(realtime)); });
+                }
+
+                // 更新实时内存副本
+                m_mapStationRTD[args.StrStationID] = realtime;
+
+                // 写入实时信息表
+                m_proxyRealtime.AddNewRow(realtime);
+
+            }
+            catch (Exception ee)
+            {
+
+            }
+        }
+
+
         // 当前数据库任务完成的通知
         private void TaskEndAction(Task task)
         {

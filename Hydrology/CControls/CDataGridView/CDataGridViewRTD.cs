@@ -506,7 +506,7 @@ namespace Hydrology.CControls
             }
 
             //流速2
-            if (entity.DV1.HasValue)
+            if (entity.DV2.HasValue)
             {
                 result.Add(entity.DV2.Value.ToString("0.000"));
             }
@@ -516,7 +516,7 @@ namespace Hydrology.CControls
             }
 
             //流速3
-            if (entity.DV1.HasValue)
+            if (entity.DV3.HasValue)
             {
                 result.Add(entity.DV3.Value.ToString("0.000"));
             }
@@ -526,7 +526,7 @@ namespace Hydrology.CControls
             }
 
             //流速4
-            if (entity.DV1.HasValue)
+            if (entity.DV4.HasValue)
             {
                 result.Add(entity.DV4.Value.ToString("0.000"));
             }

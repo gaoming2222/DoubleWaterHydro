@@ -184,6 +184,7 @@ namespace Hydrology.Entity
         public Nullable<Decimal> Vm { get; set; }
         public Nullable<Decimal> W1 { get; set; }
         public Nullable<Decimal> Q { get; set; }
+        public Nullable<Decimal> Q2 { get; set; }
         public Nullable<Decimal> v1 { get; set; }
         public Nullable<Decimal> v2 { get; set; }
         public Nullable<Decimal> v3 { get; set; }

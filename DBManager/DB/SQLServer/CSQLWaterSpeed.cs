@@ -75,6 +75,41 @@ namespace DBManager.DB.SQLServer
                 Console.WriteLine(e.Message);
             }
         }
+        /// <summary>
+        /// 插入数据到RG30表，流速1，流量1，流量2
+        /// </summary>
+        /// <param name="waterSpeedList"></param>
+        public void batchInsertRows2(List<CEntityWaterSpeed> waterSpeedList)
+        {
+            if (waterSpeedList == null || waterSpeedList.Count == 0)
+            {
+                return;
+            }
+            // 记录超过写入上线条，或者时间超过1分钟，就将当前的数据写入数据库
+            CDBLog.Instance.AddInfo("时差法流速数据：" + waterSpeedList.Count + "条");
+            StringBuilder sql = new StringBuilder();
+
+            foreach (CEntityWaterSpeed waterSpeed in waterSpeedList)
+            {
+                sql.Append("insert INTO RG30RawData(STCD,DT,AvgV1,AvgV2,AvgV3,AvgV4,W1,rawQ,Q,recvdatatime,transtype,messagetype) VALUES");
+                sql.AppendFormat("({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}),", "'" + waterSpeed.STCD + "'", "'" + waterSpeed.DT.ToString(CDBParams.GetInstance().DBDateTimeFormat) + "'",
+                    waterSpeed.AvgV1, "NULL", "NULL", "NULL", "NULL", waterSpeed.rawQ, waterSpeed.Q,
+                    "'" + waterSpeed.RevtDT.ToString(CDBParams.GetInstance().DBDateTimeFormat) + "'",
+                    CEnumHelper.ChannelTypeToDBStr(waterSpeed.ChannelType).ToString(), CEnumHelper.MessageTypeToDBStr(waterSpeed.MessageType).ToString());
+                sql.Remove(sql.Length - 1, 1);
+                sql.Append(";");
+            }
+            try
+            {
+                string sql1 = sql.ToString().Substring(0, sql.ToString().Length - 1);
+                //ExecuteSQLCommand(sql.ToString().Substring(0, sql.ToString().Length - 1));
+                ExecuteSQLCommand(sql1);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
 
         public List<CEntityWaterSpeed> QueryByTime(string station, DateTime start, DateTime end)
         {
@@ -95,13 +130,77 @@ namespace DBManager.DB.SQLServer
                     CEntityWaterSpeed waterSpeed = new CEntityWaterSpeed();
                     waterSpeed.STCD = dataTableTemp.Rows[rowid][CN_StationId].ToString();
                     waterSpeed.DT = DateTime.Parse(dataTableTemp.Rows[rowid][CN_DataTime].ToString());
-                    waterSpeed.W1 = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterStage].ToString());
-                    waterSpeed.AvgV1 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V1].ToString());
-                    waterSpeed.AvgV2 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V2].ToString());
-                    waterSpeed.AvgV3 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V3].ToString());
-                    waterSpeed.AvgV4 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V4].ToString());
-                    waterSpeed.rawQ = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlowMc].ToString());
-                    waterSpeed.Q = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlow].ToString());
+                    if(dataTableTemp.Rows[rowid][CN_WaterStage].ToString() != null && dataTableTemp.Rows[rowid][CN_WaterStage].ToString() != "")
+                    {
+                        waterSpeed.W1 = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterStage].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.W1 = null;
+                    }
+
+                    if (dataTableTemp.Rows[rowid][CN_V1].ToString() != null && dataTableTemp.Rows[rowid][CN_V1].ToString() != "")
+                    {
+                        waterSpeed.AvgV1 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V1].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.AvgV1 = null;
+                    }
+
+                    if (dataTableTemp.Rows[rowid][CN_V2].ToString() != null && dataTableTemp.Rows[rowid][CN_V2].ToString() != "")
+                    {
+                        waterSpeed.AvgV2 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V2].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.AvgV2 = null;
+                    }
+
+                    if (dataTableTemp.Rows[rowid][CN_V3].ToString() != null && dataTableTemp.Rows[rowid][CN_V3].ToString() != "")
+                    {
+                        waterSpeed.AvgV3 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V3].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.AvgV3 = null;
+                    }
+
+                    if (dataTableTemp.Rows[rowid][CN_V4].ToString() != null && dataTableTemp.Rows[rowid][CN_V4].ToString() != "")
+                    {
+                        waterSpeed.AvgV4 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V4].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.AvgV4 = null;
+                    }
+
+                    if (dataTableTemp.Rows[rowid][CN_WaterFlowMc].ToString() != null && dataTableTemp.Rows[rowid][CN_WaterFlowMc].ToString() != "")
+                    {
+                        waterSpeed.rawQ = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlowMc].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.rawQ = null;
+                    }
+
+                    if (dataTableTemp.Rows[rowid][CN_WaterFlow].ToString() != null && dataTableTemp.Rows[rowid][CN_WaterFlow].ToString() != "")
+                    {
+                        waterSpeed.Q = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlow].ToString());
+                    }
+                    else
+                    {
+                        waterSpeed.Q = null;
+                    }
+
+
+
+                    //waterSpeed.AvgV1 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V1].ToString());
+                    //waterSpeed.AvgV2 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V2].ToString());
+                    //waterSpeed.AvgV3 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V3].ToString());
+                    //waterSpeed.AvgV4 = decimal.Parse(dataTableTemp.Rows[rowid][CN_V4].ToString());
+                    //waterSpeed.rawQ = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlowMc].ToString());
+                    //waterSpeed.Q = decimal.Parse(dataTableTemp.Rows[rowid][CN_WaterFlow].ToString());
                     waterSpeed.RevtDT = DateTime.Parse(dataTableTemp.Rows[rowid][CN_RecvDataTime].ToString());
                     waterSpeed.ChannelType = CEnumHelper.DBStrToChannelType(dataTableTemp.Rows[rowid][CN_TransType].ToString());
                     waterSpeed.MessageType = CEnumHelper.DBStrToMessageType(dataTableTemp.Rows[rowid][CN_MsgType].ToString());
