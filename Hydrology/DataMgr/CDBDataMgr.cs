@@ -3576,6 +3576,16 @@ namespace Hydrology.DataMgr
                     waterSpeed.MessageType = args.EMessageType;
                     waterSpeed.ChannelType = args.EChannelType;
                     waterSpeedList.Add(waterSpeed);
+
+                    //4.封装报文进行TCP传输
+                    TCPHelper.GetInstance().initSocket();
+                    //4.1 组合流量与计算流量报文
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("68"); //增加开始符号
+                    sb.Append("ff"); //增加报文长队
+                    sb.Append("68"); //增加其实字符
+                    //控制域
+                    TCPHelper.GetInstance().sendMsgTcp("FFF");
                 }
                 //4.存储数据到数据库
                 m_proxyWaterSpeed.batchInsertRows2(waterSpeedList);

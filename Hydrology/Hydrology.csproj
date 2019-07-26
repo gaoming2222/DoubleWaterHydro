@@ -264,6 +264,7 @@
     <Compile Include="DataMgr\CWarningInfoMgr.cs" />
     <Compile Include="DataMgr\QCal.cs" />
     <Compile Include="DataMgr\SystemTimeConfig.cs" />
+    <Compile Include="DataMgr\TCPHelper.cs" />
     <Compile Include="DataMgr\XmlHelper.cs" />
     <Compile Include="Forms\CBatchFlashMgrForm.cs">
       <SubType>Form</SubType>
