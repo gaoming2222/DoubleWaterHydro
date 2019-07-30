@@ -952,6 +952,10 @@ namespace Hydrology.Forms
                 {
                     this.txt_DataProtocolName.Text = "SM100H";
                 }
+                else if (this.txt_DataDllFileName.Text == "Protocol.Data.EN2B.dll")
+                {
+                    this.txt_DataProtocolName.Text = "EN2B";
+                }
                 else if (this.txt_DataDllFileName.Text == "Protocol.Data.DRoute.dll")
                 {
                     this.txt_DataProtocolName.Text = "DRoute";
